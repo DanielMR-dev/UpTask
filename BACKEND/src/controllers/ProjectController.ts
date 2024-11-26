@@ -1,7 +1,7 @@
 import type { Request, Response } from "express"
 import Project from "../models/Project";
 
-export class ProjectController {
+export class ProjectController { // El controlador se encarga de manejar las peticiones y respuestas
     
     static createProject = async (req: Request, res: Response) => {
         
@@ -16,7 +16,12 @@ export class ProjectController {
     }
 
     static getAllProjects = async (req: Request, res: Response) => {
-        res.send('Todos los proyectos');
-    }
+        try {
+            const projects = await Project.find({});
+            res.json(projects);
+        } catch (error) {
+            console.log(error);
+        };
+    };
 
 };

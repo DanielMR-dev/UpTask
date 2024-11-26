@@ -5,6 +5,7 @@ import { handleInpoutErrors } from "../middleware/validation";
 
 const router = Router();
 
+// Llamadas del Controlador
 router.post('/', 
     body('projectName')
         .notEmpty().withMessage('El Nombre del Projecto es Obligatorio'),
@@ -12,9 +13,10 @@ router.post('/',
         .notEmpty().withMessage('El Nombre del Cliente es Obligatorio'),
     body('description')
         .notEmpty().withMessage('La Descripción del Proyecto es Obligatoria'),
-    handleInpoutErrors, // Si para la validación pasa al controlador, de lo contrario se de tiene la ejecución en el middleware
+    handleInpoutErrors, // Si pasa la validación pasa al controlador, de lo contrario se de tiene la ejecución en el middleware
     ProjectController.createProject
 );
+
 router.get('/', ProjectController.getAllProjects);
 
 export default router;
