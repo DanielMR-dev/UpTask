@@ -17,10 +17,27 @@ export class ProjectController { // El controlador se encarga de manejar las pet
 
     static getAllProjects = async (req: Request, res: Response) => {
         try {
-            const projects = await Project.find({});
-            res.json(projects);
+            const projects = await Project.find({}); // Con find se buscan todos los proyectos en la DB
+            res.json(projects); // Se envían los proyectos en formato JSON
         } catch (error) {
             console.log(error);
+        };
+    };
+
+    static getProjectById = async (req: Request, res: Response) => {
+        const { id } = req.params; // Se obtiene el id del proyecto de la URL
+        try {
+            const project = await Project.findById(id); // Se busca el proyecto en la DB por su ID
+
+            if(!project) {
+                res.status(400).json({ error: 'Proyecto no encontrado'}); // Se envía el error en formato JSON
+                return;
+            };
+
+            res.json(project); // Se envía el proyecto en formato JSON
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: 'Server Error' }); // Asegurarse de manejar el error con un mensaje
         };
     };
 
