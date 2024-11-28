@@ -61,4 +61,22 @@ export class ProjectController { // El controlador se encarga de manejar las pet
         };
     };
 
+    static deleteProject = async (req: Request, res: Response) => {
+        const { id } = req.params; // Se obtiene el id del proyecto de la URL
+        try {
+            const project = await Project.findById(id); // Se busca el proyecto en la DB por su ID
+
+            if(!project) {
+                res.status(400).json({ error: 'Proyecto no encontrado'}); // Se envía el error en formato JSON
+                return;
+            };
+
+            await project.deleteOne(); // Se elimina el proyecto de la DB
+            res.send('Projecto Eliminado');
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: 'Server Error' }); // Asegurarse de manejar el error con un mensaje
+        };
+    };
+
 };
