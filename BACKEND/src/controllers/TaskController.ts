@@ -105,4 +105,24 @@ export class TaskController {
             res.status(500).json({ error: 'Server Error' });
         }
     };
+
+    // UPDATE STATUS
+    static updateStatus = async (req: Request, res: Response) => {
+        try {
+            const { taskId } = req.params; // Se obtiene el ID de la tarea
+            const task = await Task.findById(taskId); // Se busca la tarea por ID
+            if(!task) { // Si no existe la tarea
+                const error = new Error('Tarea no encontrada');
+                res.status(404).json({ error: error.message});
+                return;
+            };
+
+            const { status } = req.body; // Se obtiene el nuevo estado de la tarea
+            task.status = status; // Se actualiza el estado de la tarea
+            await task.save(); // Se actualiza la tarea en la base de datos
+            res.send('Estado de la tarea actualizado correctamente');
+        } catch (error) {
+            res.status(500).json({ error: 'Server Error' });
+        }
+    };
 };
