@@ -2,7 +2,6 @@ import type { Request, Response } from "express"
 import Project from "../models/Project";
 
 export class ProjectController { // El controlador se encarga de manejar las peticiones y respuestas
-    
     // CREATE
     static createProject = async (req: Request, res: Response) => {
         

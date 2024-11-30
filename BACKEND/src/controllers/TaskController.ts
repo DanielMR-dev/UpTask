@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import Task from "../models/Task";
 
 export class TaskController {
+    // CREATE
     static createTask = async (req: Request, res: Response) => {
         try {
             const task = new Task(req.body); // Se crea un nuevo objeto Task con los datos del body
@@ -12,7 +13,17 @@ export class TaskController {
             await Promise.allSettled([task.save(), req.project.save()]); // Se guardan ambos documentos en la base de datos - Mejora en performance y en orden
             res.send('Tarea creada correctamente');
         } catch (error) {
-            console.log(error);
+            res.status(500).json({ error: 'Server Error' });
         };
+    };
+
+    // GET
+    static getProjectTasks = async (req: Request, res: Response) => {
+        try {
+            const tasks = await Task.find({ project: req.project.id }); // Se buscan todas las tareas que pertenecen al proyecto actual
+            res.json(tasks);
+        } catch (error) {
+            res.status(500).json({ error: 'Server Error' });
+        }
     };
 };
