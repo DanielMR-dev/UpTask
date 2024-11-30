@@ -3,6 +3,7 @@ import Project from "../models/Project";
 
 export class ProjectController { // El controlador se encarga de manejar las peticiones y respuestas
     
+    // CREATE
     static createProject = async (req: Request, res: Response) => {
         
         const project = new Project(req.body);
@@ -16,6 +17,7 @@ export class ProjectController { // El controlador se encarga de manejar las pet
         }
     }
 
+    // GET ALL
     static getAllProjects = async (req: Request, res: Response) => {
         try {
             const projects = await Project.find({}); // Con find se buscan todos los proyectos en la DB
@@ -26,13 +28,15 @@ export class ProjectController { // El controlador se encarga de manejar las pet
         };
     };
 
+    // GET BY ID
     static getProjectById = async (req: Request, res: Response) => {
         const { id } = req.params; // Se obtiene el id del proyecto de la URL
         try {
             const project = await Project.findById(id); // Se busca el proyecto en la DB por su ID
 
             if(!project) {
-                res.status(400).json({ error: 'Proyecto no encontrado'}); // Se envía el error en formato JSON
+                const error = new Error("Project not found");
+                res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
                 return;
             };
 
@@ -43,13 +47,15 @@ export class ProjectController { // El controlador se encarga de manejar las pet
         };
     };
 
+    // UPDATE
     static updateProject = async (req: Request, res: Response) => {
         const { id } = req.params; // Se obtiene el id del proyecto de la URL
         try {
             const project = await Project.findByIdAndUpdate(id, req.body); // Se busca el proyecto en la DB por su ID
 
             if(!project) {
-                res.status(400).json({ error: 'Proyecto no encontrado'}); // Se envía el error en formato JSON
+                const error = new Error("Project not found");
+                res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
                 return;
             };
 
@@ -61,13 +67,15 @@ export class ProjectController { // El controlador se encarga de manejar las pet
         };
     };
 
+    // DELETE
     static deleteProject = async (req: Request, res: Response) => {
         const { id } = req.params; // Se obtiene el id del proyecto de la URL
         try {
             const project = await Project.findById(id); // Se busca el proyecto en la DB por su ID
 
             if(!project) {
-                res.status(400).json({ error: 'Proyecto no encontrado'}); // Se envía el error en formato JSON
+                const error = new Error("Project not found");
+                res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
                 return;
             };
 

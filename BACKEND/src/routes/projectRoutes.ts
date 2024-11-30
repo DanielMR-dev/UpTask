@@ -44,7 +44,7 @@ router.delete('/:id',
 
 // Routes para las tareas
 router.post('/:projectId/tasks',
-    TaskController.createProject
+    TaskController.createTask
 );
 
 
