@@ -8,6 +8,8 @@ import { validateProjectExist } from "../middleware/project";
 const router = Router();
 
 // Llamadas del Controlador
+
+// Crear un nuevo proyecto
 router.post('/', 
     body('projectName')
         .notEmpty().withMessage('El Nombre del Projecto es Obligatorio'),
@@ -19,13 +21,16 @@ router.post('/',
     ProjectController.createProject
 );
 
+// Obtener todos los proyectos
 router.get('/', ProjectController.getAllProjects);
 
+// Obtener un proyecto por id
 router.get('/:id', 
     param('id').isMongoId().withMessage('ID no válido'), // Validación de ID
     ProjectController.getProjectById
 );
 
+// Actualizar proyecto
 router.put('/:id', 
     param('id').isMongoId().withMessage('ID no válido'), // Validación de ID
     body('projectName')
@@ -38,15 +43,18 @@ router.put('/:id',
     ProjectController.updateProject
 );
 
+// Eliminar proyecto
 router.delete('/:id', 
     param('id').isMongoId().withMessage('ID no válido'), // Validación de ID
     ProjectController.deleteProject
 );
 
+
 // Routes para las tareas
+router.param('projectId', validateProjectExist); // Validación de ID del proyecto antes de las rutas de tareas
+
 // Crear tarea
 router.post('/:projectId/tasks',
-    validateProjectExist,
     body('name')
         .notEmpty().withMessage('El Nombre de la Tarea es Obligatorio'),
     body('description')
@@ -57,13 +65,16 @@ router.post('/:projectId/tasks',
 
 // Obtener todas las tareas de un proyecto
 router.get('/:projectId/tasks',
-    validateProjectExist,
     TaskController.getProjectTasks
 );
 
 // Obtener una tarea por ID
 router.get('/:projectId/tasks/:taskId',
-    validateProjectExist,
+    param('taskId').isMongoId().withMessage('ID no válido'), // Validación de ID
+    handleInpoutErrors,
     TaskController.getTaskById
 );
+
+
+
 export default router;
