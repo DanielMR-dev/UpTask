@@ -38,7 +38,7 @@ export class TaskController {
                 res.status(404).json({ error: error.message});
                 return;
             };
-            
+
             if(task.project.toString() !== req.project.id) { // Se verifica si la tarea pertenece al proyecto actual
                 const error = new Error('La Tarea no pertenece al proyecto');
                 res.status(400).json({ error: error.message});
@@ -46,6 +46,30 @@ export class TaskController {
             }
 
             res.json(task); // Se envía la tarea encontrada en formato JSON
+        } catch (error) {
+            res.status(500).json({ error: 'Server Error' });
+        }
+    };
+
+    // UPDATE
+    static updateTask = async (req: Request, res: Response) => {
+        try {
+            const { taskId } = req.params;
+            const task = await Task.findByIdAndUpdate(taskId, req.body); // Se busca la tarea por ID y se actualiza con los datos del body
+
+            if(!task) { // Si no existe la tarea
+                const error = new Error('Tarea no encontrada');
+                res.status(404).json({ error: error.message});
+                return;
+            };
+            
+            if(task.project.toString() !== req.project.id) { // Se verifica si la tarea pertenece al proyecto actual
+                const error = new Error('La Tarea no pertenece al proyecto');
+                res.status(400).json({ error: error.message});
+                return;
+            }
+
+            res.send('Tarea Actualizada correctamente'); 
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
         }
