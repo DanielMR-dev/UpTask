@@ -55,7 +55,35 @@ export class TaskController {
     static updateTask = async (req: Request, res: Response) => {
         try {
             const { taskId } = req.params;
-            const task = await Task.findByIdAndUpdate(taskId, req.body); // Se busca la tarea por ID y se actualiza con los datos del body
+            const task = await Task.findById(taskId); // Se busca la tarea por ID
+
+            if(!task) { // Si no existe la tarea
+                const error = new Error('Tarea no encontrada');
+                res.status(404).json({ error: error.message});
+                return;
+            };
+            
+            if(task.project.toString() !== req.project.id) { // Se verifica si la tarea pertenece al proyecto actual
+                const error = new Error('La Tarea no pertenece al proyecto');
+                res.status(400).json({ error: error.message});
+                return;
+            };
+
+            task.name = req.body.name // Se actualiza el nombre de la tarea
+            task.description = req.body.description // Se actualiza la descripción de la tarea
+            await task.save(); // Se actualiza la tarea en la base de datos
+
+            res.send('Tarea Actualizada correctamente'); 
+        } catch (error) {
+            res.status(500).json({ error: 'Server Error' });
+        }
+    };
+
+    // DELETE
+    static deleteTask = async (req: Request, res: Response) => {
+        try {
+            const { taskId } = req.params;
+            const task = await Task.findById(taskId); // Se busca la tarea por ID
 
             if(!task) { // Si no existe la tarea
                 const error = new Error('Tarea no encontrada');
@@ -69,7 +97,10 @@ export class TaskController {
                 return;
             }
 
-            res.send('Tarea Actualizada correctamente'); 
+            req.project.tasks = req.project.tasks.filter( task => task._id.toString() !== taskId ); // Se filtra la tarea a eliminar del proyecto
+            await Promise.allSettled([task.deleteOne(), req.project.save()]) // Se elimina la tarea y se guarda el proyecto
+            res.send('Tarea Eliminada Correctamente');
+
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
         }
