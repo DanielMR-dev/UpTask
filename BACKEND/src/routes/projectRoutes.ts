@@ -46,6 +46,11 @@ router.delete('/:id',
 // Routes para las tareas
 router.post('/:projectId/tasks',
     validateProjectExist,
+    body('name')
+        .notEmpty().withMessage('El Nombre de la Tarea es Obligatorio'),
+    body('description')
+        .notEmpty().withMessage('La Descripción de la Tarea es Obligatoria'),
+    handleInpoutErrors, // Si pasa la validación pasa al controlador, de lo contrario se de tiene la ejecución en el middleware
     TaskController.createTask
 );
 
