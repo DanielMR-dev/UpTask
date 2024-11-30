@@ -44,6 +44,7 @@ router.delete('/:id',
 );
 
 // Routes para las tareas
+// Crear tarea
 router.post('/:projectId/tasks',
     validateProjectExist,
     body('name')
@@ -54,9 +55,15 @@ router.post('/:projectId/tasks',
     TaskController.createTask
 );
 
+// Obtener todas las tareas de un proyecto
 router.get('/:projectId/tasks',
     validateProjectExist,
     TaskController.getProjectTasks
 );
 
+// Obtener una tarea por ID
+router.get('/:projectId/tasks/:taskId',
+    validateProjectExist,
+    TaskController.getTaskById
+);
 export default router;

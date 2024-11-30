@@ -34,7 +34,7 @@ export class ProjectController { // El controlador se encarga de manejar las pet
             const project = await Project.findById(id).populate('tasks'); // Con findById se busca un proyecto por id y se llena la propiedad tasks con los datos de la tarea
 
             if(!project) {
-                const error = new Error("Project not found");
+                const error = new Error('Project not found');
                 res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
                 return;
             };

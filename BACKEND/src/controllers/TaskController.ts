@@ -17,11 +17,35 @@ export class TaskController {
         };
     };
 
-    // GET
+    // GET ALL
     static getProjectTasks = async (req: Request, res: Response) => {
         try {
             const tasks = await Task.find({ project: req.project.id }).populate('project'); // Se buscan todas las tareas del proyecto y el projecto
             res.json(tasks);
+        } catch (error) {
+            res.status(500).json({ error: 'Server Error' });
+        }
+    };
+
+    // GET BY ID
+    static getTaskById = async (req: Request, res: Response) => {
+        try {
+            const { taskId } = req.params;
+            const task = await Task.findById(taskId); // Se busca la tarea por ID
+
+            if(!task) { // Si no existe la tarea
+                const error = new Error('Tarea no encontrada');
+                res.status(404).json({ error: error.message});
+                return;
+            };
+            
+            if(task.project.toString() !== req.project.id) { // Se verifica si la tarea pertenece al proyecto actual
+                const error = new Error('La Tarea no pertenece al proyecto');
+                res.status(400).json({ error: error.message});
+                return;
+            }
+
+            res.json(task); // Se envía la tarea encontrada en formato JSON
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
         }
