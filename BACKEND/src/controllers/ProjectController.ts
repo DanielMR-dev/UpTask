@@ -31,7 +31,7 @@ export class ProjectController { // El controlador se encarga de manejar las pet
     static getProjectById = async (req: Request, res: Response) => {
         const { id } = req.params; // Se obtiene el id del proyecto de la URL
         try {
-            const project = await Project.findById(id); // Se busca el proyecto en la DB por su ID
+            const project = await Project.findById(id).populate('tasks'); // Con findById se busca un proyecto por id y se llena la propiedad tasks con los datos de la tarea
 
             if(!project) {
                 const error = new Error("Project not found");
