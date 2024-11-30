@@ -20,7 +20,7 @@ export class TaskController {
     // GET
     static getProjectTasks = async (req: Request, res: Response) => {
         try {
-            const tasks = await Task.find({ project: req.project.id }); // Se buscan todas las tareas que pertenecen al proyecto actual
+            const tasks = await Task.find({ project: req.project.id }).populate('project'); // Se buscan todas las tareas del proyecto y el projecto
             res.json(tasks);
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
