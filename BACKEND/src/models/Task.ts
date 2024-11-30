@@ -42,5 +42,5 @@ export const TaskSchema: Schema = new Schema({
 }, {timestamps: true});
 
 // Definir el Modelo para Mongoose
-const Task = mongoose.model<ITask>('Taks', TaskSchema);
+const Task = mongoose.model<ITask>('Task', TaskSchema);
 export default Task;
