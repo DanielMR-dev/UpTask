@@ -3,7 +3,8 @@ import { body, param } from "express-validator";
 import { ProjectController } from "../controllers/ProjectController";
 import { handleInpoutErrors } from "../middleware/validation";
 import { TaskController } from "../controllers/TaskController";
-import { validateProjectExist } from "../middleware/project";
+import { projectExist } from "../middleware/project";
+import { taskExist } from "../middleware/task";
 
 const router = Router();
 
@@ -51,7 +52,7 @@ router.delete('/:id',
 
 
 // Routes para las tareas
-router.param('projectId', validateProjectExist); // Validación de ID del proyecto antes de las rutas de tareas
+router.param('projectId', projectExist); // Validación de ID del proyecto antes de las rutas de tareas
 
 // Crear tarea
 router.post('/:projectId/tasks',
@@ -67,6 +68,8 @@ router.post('/:projectId/tasks',
 router.get('/:projectId/tasks',
     TaskController.getProjectTasks
 );
+
+router.param('taskId', taskExist);
 
 // Obtener una tarea por ID
 router.get('/:projectId/tasks/:taskId',

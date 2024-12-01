@@ -9,13 +9,13 @@ declare global {
     }
 };
 
-export async function validateProjectExist(req : Request, res: Response, next: NextFunction) {
+export async function projectExist(req : Request, res: Response, next: NextFunction) {
     try {
         const { projectId } = req.params; // Obtiene el ID del projecto desde el parámetro de la URL
         const project = await Project.findById(projectId); // Busca el proyecto en la base de datos
 
         if(!project) { // Si no se encuentra el projecto se ejecuta el siguiente código
-            const error = new Error("Project not found");
+            const error = new Error("Proyecto NO Encontrado");
             res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
             return;
         };
