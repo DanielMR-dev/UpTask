@@ -4,7 +4,7 @@ import { ProjectController } from "../controllers/ProjectController";
 import { handleInpoutErrors } from "../middleware/validation";
 import { TaskController } from "../controllers/TaskController";
 import { projectExist } from "../middleware/project";
-import { taskExist } from "../middleware/task";
+import { taskBelongsToProject, taskExist } from "../middleware/task";
 
 const router = Router();
 
@@ -51,7 +51,9 @@ router.delete('/:id',
 );
 
 
-// Routes para las tareas
+// ROUTES PARA LAS TAREAS
+
+// - MIDDLEWARES
 router.param('projectId', projectExist); // Validación de ID del proyecto antes de las rutas de tareas
 
 // Crear tarea
@@ -69,7 +71,10 @@ router.get('/:projectId/tasks',
     TaskController.getProjectTasks
 );
 
-router.param('taskId', taskExist);
+
+// Validaciones para taskID de cada tarea - MIDDLEWARES
+router.param('taskId', taskExist); // Validación de ID de la tarea antes de las rutas de tareas
+router.param('taskId', taskBelongsToProject); // Validación de que la tarea pertenece al proyecto actual
 
 // Obtener una tarea por ID
 router.get('/:projectId/tasks/:taskId',

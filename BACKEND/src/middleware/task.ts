@@ -25,3 +25,12 @@ export async function taskExist(req : Request, res: Response, next: NextFunction
         res.status(500).json({ error: 'Server Error' });
     }  
 };
+
+export function taskBelongsToProject(req : Request, res: Response, next: NextFunction) {
+    if(req.task.project.toString() !== req.project.id.toString()) { // Se verifica si la tarea pertenece al proyecto actual
+        const error = new Error('La Tarea no pertenece al proyecto'); // Si no pertenece se crea un error
+        res.status(400).json({ error: error.message});
+        return;
+    };
+    next(); // Si pertenece, pasa al siguiente Middleware
+};

@@ -50,13 +50,17 @@ export class ProjectController { // El controlador se encarga de manejar las pet
     static updateProject = async (req: Request, res: Response) => {
         const { id } = req.params; // Se obtiene el id del proyecto de la URL
         try {
-            const project = await Project.findByIdAndUpdate(id, req.body); // Se busca el proyecto en la DB por su ID
+            const project = await Project.findById(id); // Se busca el proyecto en la DB por su ID
 
             if(!project) {
                 const error = new Error("Project not found");
                 res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
                 return;
             };
+
+            project.clientName = req.body.clientName; // Se actualiza el nombre del cliente
+            project.projectName = req.body.projectName; // Se actualiza el nombre del proyecto
+            project.description = req.body.description; // Se actualiza la descripción del proyecto
 
             await project.save(); // Se actualiza el proyecto en la DB
             res.send('Proyecto Actualizado');
