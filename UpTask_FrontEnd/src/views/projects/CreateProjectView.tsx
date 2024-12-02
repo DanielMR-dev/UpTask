@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import ProjectForm from "@/components/projects/ProjectForm";
 import { ProjectFormData } from "@/types/index";
@@ -19,13 +20,20 @@ export default function CreateProjectView() {
     // Validaciones del formulario 
     const {register, handleSubmit, formState: {errors} } = useForm({ defaultValues: initialValues });
 
-    // Manejo de la creación de un nuevo proyecto
-    const handleForm = async (formData : ProjectFormData) => {
-        const data = await createProject(formData); // Llamada a la API para crear un nuevo proyecto
-        toast.success(data); // Muestra un mensaje de éxito
-        navigate('/'); // Se redirecciona al usuario hacia la página principal
-    };
+    const { mutate } = useMutation({ // Se aplica destructuring a mutate
+        mutationFn: createProject, // La función que se va a ejecutar - en este caso createProject no requiere los parámetros
+        onError: () => {
+            
+        },
+        onSuccess: (data) => { // Si la operación se ejecuta correctamente toma los datos que retorna la función del mutationFn
+            toast.success(data);
+            navigate('/'); // Se redirecciona al usuario hacia la página principal
+        }
+    });
 
+    // Manejo de la creación de un nuevo proyecto
+    const handleForm = (formData : ProjectFormData) => mutate(formData); // La información para crear el proyecto se envía en la función de mutate
+    
     return (
         <>
             <div className="max-w-3xl mx-auto">
