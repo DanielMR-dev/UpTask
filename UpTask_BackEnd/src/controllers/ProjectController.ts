@@ -4,7 +4,7 @@ import Project from "../models/Project";
 export class ProjectController { // El controlador se encarga de manejar las peticiones y respuestas
     // CREATE
     static createProject = async (req: Request, res: Response) => {
-        const project = new Project(req.body);
+        const project = new Project(req.body); // Creamos un nuevo proyecto con los datos del cuerpo de la petición
         try {
             await project.save(); // Con save se guarda el projecto en la DB
             res.send('Proyecto Creado Correctamente');
@@ -32,7 +32,7 @@ export class ProjectController { // El controlador se encarga de manejar las pet
             const project = await Project.findById(id).populate('tasks'); // Con findById se busca un proyecto por id y se llena la propiedad tasks con los datos de la tarea
 
             if(!project) {
-                const error = new Error('Project not found');
+                const error = new Error('Proyecto no encontrado');
                 res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
                 return;
             };
@@ -51,7 +51,7 @@ export class ProjectController { // El controlador se encarga de manejar las pet
             const project = await Project.findById(id); // Se busca el proyecto en la DB por su ID
 
             if(!project) {
-                const error = new Error("Project not found");
+                const error = new Error('Proyecto no encontrado');
                 res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
                 return;
             };
@@ -75,7 +75,7 @@ export class ProjectController { // El controlador se encarga de manejar las pet
             const project = await Project.findById(id); // Se busca el proyecto en la DB por su ID
 
             if(!project) {
-                const error = new Error("Project not found");
+                const error = new Error('Proyecto no encontrado');
                 res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
                 return;
             };

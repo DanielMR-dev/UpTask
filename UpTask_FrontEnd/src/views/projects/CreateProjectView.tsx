@@ -22,8 +22,8 @@ export default function CreateProjectView() {
 
     const { mutate } = useMutation({ // Se aplica destructuring a mutate
         mutationFn: createProject, // La función que se va a ejecutar - en este caso createProject no requiere los parámetros
-        onError: () => {
-            
+        onError: (error) => {
+            toast.error(error.message);
         },
         onSuccess: (data) => { // Si la operación se ejecuta correctamente toma los datos que retorna la función del mutationFn
             toast.success(data);
