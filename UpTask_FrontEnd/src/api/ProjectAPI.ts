@@ -4,7 +4,7 @@ import { ProjectFormData } from "../types";
 export async function createProject(formData : ProjectFormData) {
     try {
         const { data } = await api.post('/projects', formData); // Se envía la petición por medio de la api
-        console.log(data);
+        return data;
     } catch (error) {
         console.log(error);
     }
