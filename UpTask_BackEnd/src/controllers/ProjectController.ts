@@ -4,16 +4,14 @@ import Project from "../models/Project";
 export class ProjectController { // El controlador se encarga de manejar las peticiones y respuestas
     // CREATE
     static createProject = async (req: Request, res: Response) => {
-        
         const project = new Project(req.body);
-
         try {
-            await project.save() // Con save se guarda el projecto en la DB
+            await project.save(); // Con save se guarda el projecto en la DB
             res.send('Proyecto Creado Correctamente');
         } catch (error) {
             console.log(error);
             res.status(500).json({ error: 'Server Error' }); // Asegurarse de manejar el error con un mensaje
-        }
+        };
     }
 
     // GET ALL
