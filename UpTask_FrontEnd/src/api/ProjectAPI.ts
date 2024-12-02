@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import { ProjectFormData } from "../types";
+import { dashBoardProjectSchema, ProjectFormData } from "../types";
 import { isAxiosError } from "axios";
 
 // Crear el Proyecto - POST
@@ -18,7 +18,10 @@ export async function createProject(formData : ProjectFormData) {
 export async function getProjects() {
     try {
         const { data } = await api.get('/projects'); // Se envía la petición GET por medio de la api
-        return data;
+        const response = dashBoardProjectSchema.safeParse(data); // Se parsea la respuesta para verificar que cumpla con el schema
+        if(response.success) { 
+            return response.data;
+        };
     } catch (error) {
         if(isAxiosError(error) && error.response) {
             throw new Error(error.response.data.error); // Si el error es de axios y tiene una respuesta, se lanza un error con el mensaje de error
