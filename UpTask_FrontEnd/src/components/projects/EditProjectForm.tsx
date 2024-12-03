@@ -1,13 +1,16 @@
 import { Link } from "react-router-dom";
 import ProjectForm from "./ProjectForm";
-import { ProjectFormData } from "@/types/index";
+import { Project, ProjectFormData } from "@/types/index";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { updateProject } from "@/api/ProjectAPI";
 
 type EditProjectFormProps = {
     data: ProjectFormData;
+    projectId: Project['_id'];
 };
 
-export default function EditProjectForm({data} : EditProjectFormProps) {
+export default function EditProjectForm({data, projectId} : EditProjectFormProps) {
 
     // Validaciones y valores  del formulario 
     const {register, handleSubmit, formState: {errors} } = useForm({ defaultValues: {
@@ -16,9 +19,23 @@ export default function EditProjectForm({data} : EditProjectFormProps) {
         description : data.description,
     }});
 
+    const { mutate } = useMutation({
+        mutationFn: updateProject,
+        onError() {
+            
+        },
+        onSuccess() {
+
+        }
+    });
+
     // Manejo de la edición del proyecto
     const handleForm = (formData: ProjectFormData) => {
-        console.log(formData);
+        const data = { // Se pasa un objeto con la información del proyecto
+            formData, // Se para la información del formulario
+            projectId // Se pasa el id del proyecto
+        };
+        mutate(data);
     };
 
     return (

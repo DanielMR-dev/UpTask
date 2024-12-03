@@ -40,3 +40,20 @@ export async function getProjectById(id: Project['_id']) { //
         };
     };
 };
+
+type ProjectAPIType = { // 
+    formData: ProjectFormData,
+    projectId: Project['_id']
+}
+
+// Actualizar proyecto - PUT
+export async function updateProject({formData, projectId} : ProjectAPIType ) { // 
+    try {
+        const { data } = await api.put(`/projects/${projectId}`, formData); // Se envía la petición PUT por medio de la api
+        return data;
+    } catch (error) {
+        if(isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error); // Si el error es de axios y tiene una respuesta, se lanza un error con el mensaje de error
+        };
+    };
+};
