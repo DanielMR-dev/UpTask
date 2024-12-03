@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ProjectForm from "./ProjectForm";
 import { Project, ProjectFormData } from "@/types/index";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProject } from "@/api/ProjectAPI";
 import { toast } from "react-toastify";
 
@@ -22,13 +22,19 @@ export default function EditProjectForm({data, projectId} : EditProjectFormProps
         description : data.description,
     }});
 
+    const queryClient = useQueryClient();
+
     const { mutate } = useMutation({ // Se aplica destructuring a mutate
         mutationFn: updateProject,
         onError: (error) => { // Si hay un error
-            toast.error(error.message);
+            toast.error(error.message); // Muestra el mensaje de error
         },
         onSuccess: (data) => { // Si la operación se ejecuta correctamente toma los datos que retorna la función del mutationFn
-            toast.success(data);
+            // Con invalidateQueries va a obligar a hacer un query nuevo del query elegido para cuando se redirija al usuario
+            queryClient.invalidateQueries({queryKey: ['projects']}); // Invalida el quey de projects
+            queryClient.invalidateQueries({queryKey: ['editProject', projectId]}); // Invalida el quey de editProject
+            
+            toast.success(data); // Muestra el mensaje de éxito
             navigate('/'); // Se redirecciona al usuario hacia la página principal
         }
     });
