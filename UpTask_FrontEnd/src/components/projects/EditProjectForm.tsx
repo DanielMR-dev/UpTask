@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProjectForm from "./ProjectForm";
 import { Project, ProjectFormData } from "@/types/index";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { updateProject } from "@/api/ProjectAPI";
+import { toast } from "react-toastify";
 
 type EditProjectFormProps = {
     data: ProjectFormData;
@@ -12,6 +13,8 @@ type EditProjectFormProps = {
 
 export default function EditProjectForm({data, projectId} : EditProjectFormProps) {
 
+    const navigate = useNavigate();
+
     // Validaciones y valores  del formulario 
     const {register, handleSubmit, formState: {errors} } = useForm({ defaultValues: {
         projectName : data.projectName,
@@ -19,13 +22,14 @@ export default function EditProjectForm({data, projectId} : EditProjectFormProps
         description : data.description,
     }});
 
-    const { mutate } = useMutation({
+    const { mutate } = useMutation({ // Se aplica destructuring a mutate
         mutationFn: updateProject,
-        onError() {
-            
+        onError: (error) => { // Si hay un error
+            toast.error(error.message);
         },
-        onSuccess() {
-
+        onSuccess: (data) => { // Si la operación se ejecuta correctamente toma los datos que retorna la función del mutationFn
+            toast.success(data);
+            navigate('/'); // Se redirecciona al usuario hacia la página principal
         }
     });
 

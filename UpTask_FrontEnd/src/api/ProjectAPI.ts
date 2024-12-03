@@ -49,7 +49,7 @@ type ProjectAPIType = { //
 // Actualizar proyecto - PUT
 export async function updateProject({formData, projectId} : ProjectAPIType ) { // 
     try {
-        const { data } = await api.put(`/projects/${projectId}`, formData); // Se envía la petición PUT por medio de la api
+        const { data } = await api.put<string>(`/projects/${projectId}`, formData); // Se envía la petición PUT por medio de la api
         return data;
     } catch (error) {
         if(isAxiosError(error) && error.response) {
