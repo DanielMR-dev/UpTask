@@ -2,8 +2,9 @@ import { Fragment } from 'react';
 import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react';
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { getProjects } from "@/api/ProjectAPI";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteProject, getProjects } from "@/api/ProjectAPI";
+import { toast } from 'react-toastify';
 
 export default function DashBoardView() {
 
@@ -11,6 +12,19 @@ export default function DashBoardView() {
     const { data, isLoading } = useQuery({
         queryKey: ['projects'],
         queryFn: getProjects
+    });
+
+    // Manejo de la eliminación del proyecto
+    const queryClient = useQueryClient();
+    const { mutate } = useMutation({ // Se aplica destructuring a mutate
+        mutationFn: deleteProject, // La función que se va a ejecutar 
+        onError: (error) => { // Si hay un error
+            toast.error(error.message);
+        },
+        onSuccess: (data) => { // Si la operación se ejecuta correctamente toma los datos que retorna la función del mutationFn
+            toast.success(data);
+            queryClient.invalidateQueries({queryKey: ['projects']}); // Invalida el query de projects - Fuerza un nuevo ReFetch a la API para obtener los datos actualizados
+        }
     });
 
     if(isLoading) return 'Cargando...';
@@ -75,7 +89,7 @@ export default function DashBoardView() {
                                             <button
                                                 type='button'
                                                 className='block px-3 py-1 text-sm leading-6 text-red-500'
-                                                onClick={() => { }}
+                                                onClick={() => mutate(project._id)}
                                             >
                                                 Eliminar Proyecto
                                             </button>

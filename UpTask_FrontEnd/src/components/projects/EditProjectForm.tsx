@@ -31,8 +31,8 @@ export default function EditProjectForm({data, projectId} : EditProjectFormProps
         },
         onSuccess: (data) => { // Si la operación se ejecuta correctamente toma los datos que retorna la función del mutationFn
             // Con invalidateQueries va a obligar a hacer un query nuevo del query elegido para cuando se redirija al usuario
-            queryClient.invalidateQueries({queryKey: ['projects']}); // Invalida el quey de projects
-            queryClient.invalidateQueries({queryKey: ['editProject', projectId]}); // Invalida el quey de editProject
+            queryClient.invalidateQueries({queryKey: ['projects']}); // Invalida el query de projects
+            queryClient.invalidateQueries({queryKey: ['editProject', projectId]}); // Invalida el query de editProject
             
             toast.success(data); // Muestra el mensaje de éxito
             navigate('/'); // Se redirecciona al usuario hacia la página principal
