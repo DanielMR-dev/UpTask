@@ -17,8 +17,8 @@ export default function CreateProjectView() {
         description : '',
     };
 
-    // Validaciones del formulario 
-    const {register, handleSubmit, formState: {errors} } = useForm({ defaultValues: initialValues });
+    // Validaciones y valores del formulario 
+    const { register, handleSubmit, formState: {errors} } = useForm({ defaultValues: initialValues });
 
     const { mutate } = useMutation({ // Se aplica destructuring a mutate
         mutationFn: createProject, // La función que se va a ejecutar - en este caso createProject no requiere los parámetros
