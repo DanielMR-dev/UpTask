@@ -5,7 +5,7 @@ import { isAxiosError } from "axios";
 // Crear el Proyecto - POST
 export async function createProject(formData : ProjectFormData) {
     try {
-        const { data } = await api.post('/projects', formData); // Se envía la petición POST por medio de la api
+        const { data } = await api.post('/projects', formData); // Se envía la petición POST por medio de la API
         return data; // Se devuelve la respuesta
     } catch (error) {
         if(isAxiosError(error) && error.response) {
@@ -17,7 +17,7 @@ export async function createProject(formData : ProjectFormData) {
 // Obtener todos los proyectos - GET
 export async function getProjects() {
     try {
-        const { data } = await api.get('/projects'); // Se envía la petición GET por medio de la api
+        const { data } = await api.get('/projects'); // Se envía la petición GET por medio de la API
         const response = dashBoardProjectSchema.safeParse(data); // Se parsea la respuesta para verificar que cumpla con el schema
         if(response.success) { 
             return response.data;
@@ -32,7 +32,7 @@ export async function getProjects() {
 // Obtener un proyecto - GET BY ID
 export async function getProjectById(id: Project['_id']) { // 
     try {
-        const { data } = await api.get(`/projects/${id}`); // Se envía la petición GET por medio de la api
+        const { data } = await api.get(`/projects/${id}`); // Se envía la petición GET por medio de la API
         return data;
     } catch (error) {
         if(isAxiosError(error) && error.response) {
@@ -48,7 +48,7 @@ type ProjectAPIType = { //
 }
 export async function updateProject({formData, projectId} : ProjectAPIType ) { // 
     try {
-        const { data } = await api.put<string>(`/projects/${projectId}`, formData); // Se envía la petición PUT por medio de la api
+        const { data } = await api.put<string>(`/projects/${projectId}`, formData); // Se envía la petición PUT por medio de la API
         return data;
     } catch (error) {
         if(isAxiosError(error) && error.response) {
@@ -60,7 +60,7 @@ export async function updateProject({formData, projectId} : ProjectAPIType ) { /
 // Eliminar un proyecto - DELETE
 export async function deleteProject(id: Project['_id']) { // 
     try {
-        const { data } = await api.delete<string>(`/projects/${id}`); // Se envía la petición GET por medio de la api
+        const { data } = await api.delete<string>(`/projects/${id}`); // Se envía la petición GET por medio de la API
         return data;
     } catch (error) {
         if(isAxiosError(error) && error.response) {
