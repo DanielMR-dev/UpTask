@@ -50,7 +50,7 @@ export default function TaskList({tasks} : TaskListProps) {
 
             <div className='flex gap-5 overflow-x-scroll 2xl:overflow-auto pb-32'>
                 {Object.entries(groupedTasks).map(([status, tasks]) => (
-                    <div key={status} className='min-w-[200px] 2xl:min-w-0 2xl:w-1/5'>
+                    <div key={status} className='flex-1 min-w-[200px] 2xl:min-w-0'>
                         <h3 
                             className={`captalize text-xl font-light border border-slate-300 bg-white p-3 border-t-8 ${statusStyles[status]}`}
                         >{statusTranslations[status]}</h3>
