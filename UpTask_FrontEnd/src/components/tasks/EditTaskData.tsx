@@ -18,5 +18,5 @@ export default function EditTaskData() {
         enabled: !!taskId // Solo se ejecuta si taskId es true, solo es true si tiene algo
     });
 
-    if(data) return <EditTaskModal />
+    if(data) return <EditTaskModal data={data} />
 };
