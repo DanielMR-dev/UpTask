@@ -1,11 +1,12 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { getTaskById } from '@/api/TaskAPI';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getTaskById, updateStatus } from '@/api/TaskAPI';
 import { toast } from 'react-toastify';
 import { formatDate } from '@/utils/utils';
 import { statusTranslations } from '@/locales/es';
+import { TaskStatus } from '@/types/index';
 
 
 export default function TaskModalDetails() {
@@ -28,6 +29,28 @@ export default function TaskModalDetails() {
         enabled: !!taskId, // Solo realizar la consulta si taskId existe
         retry: false
     });
+
+    const queryClient = useQueryClient(); // Obtener la instancia de la caché
+
+    // Hook encargado de realizar la actualización
+    const { mutate } = useMutation({
+        mutationFn: updateStatus,
+        onError(error) {
+            toast.error(error.message);
+        },
+        onSuccess(data) {
+            toast.success(data);
+            queryClient.invalidateQueries({queryKey: ['project', projectId]}); // Invalidar el query de "project" para actualizar la lista de las tareas
+            queryClient.invalidateQueries({queryKey: ['task', taskId]}); // Invalidar el query de "task" para actualizar la información de la tarea en el modal
+            navigate(location.pathname, {replace : true}); // Cierra la ventana Modal
+        }
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const status = e.target.value as TaskStatus; // Obtener el valor seleccionado
+        const data = { projectId, taskId, status }; // Crear el objeto con los datos para la actualización
+        mutate(data); // Realizar la actualización con el hook de mutación
+    };
 
     if(isError) {
         toast.error(error.message, { toastId: 'error' }); // Mostrar un mensaje de error y con toastId se crea un id para no mostrar toast adicionales
@@ -76,6 +99,7 @@ export default function TaskModalDetails() {
                                         <select 
                                             className='w-full p-3 bg-white border border-gray-300'
                                             defaultValue={data.status}
+                                            onChange={handleChange}
                                         >
                                             {Object.entries(statusTranslations).map(([key, value]) => (
                                                 <option key={key} value={key}>{value}</option>

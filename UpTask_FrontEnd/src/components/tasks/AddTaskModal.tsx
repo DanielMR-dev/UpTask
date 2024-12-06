@@ -39,8 +39,8 @@ export default function AddTaskModal() {
             toast.error(error.message);
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({queryKey: ['editProject', projectId]}); // Reiniciar el Query del proyecto donde nos encontramos modificando tareas
             toast.success(data);
+            queryClient.invalidateQueries({queryKey: ['project', projectId]}); // Reiniciar el Query del proyecto donde nos encontramos modificando tareas
             reset(); // Reinicia el formulario
             navigate(location.pathname, {replace : true}); // Cierra la ventana Modal
         }

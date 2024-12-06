@@ -35,7 +35,8 @@ export default function EditTaskModal({data, taskId} : EditTaskModalProps) {
             toast.error(error.message);
         },
         onSuccess: (data) => {
-            queryClient.invalidateQueries({queryKey: ['editProject', projectId]}); // Reiniciar el Query del proyecto donde nos encontramos modificando tareas
+            queryClient.invalidateQueries({queryKey: ['project', projectId]}); // Reiniciar el Query del proyecto donde nos encontramos modificando tareas
+            queryClient.invalidateQueries({queryKey: ['task', taskId]}); // Reiniciar el Query de la tarea que estamos editando
             toast.success(data);
             reset(); // Reinicia el formulario
             navigate(location.pathname, {replace : true}); // Cierra la ventana Modal

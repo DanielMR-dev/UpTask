@@ -18,8 +18,7 @@ const intialStatusGroups : GroupedTasks = {
     inProgress: [],
     underReview: [],
     completed: [],
-}
-
+};
 
 // Diccionario de colores
 const statusStyles: {[key:string] : string} = { // Las keys y los valores son strings

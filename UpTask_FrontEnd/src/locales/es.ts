@@ -3,6 +3,6 @@ export const statusTranslations: {[key:string] : string} = { // Las keys y los v
     pending: 'Pendiente', 
     onHold: 'En Espera',
     inProgress: 'En Progreso',
-    underReview: 'En Revision',
+    underReview: 'En Revisión',
     completed: 'Completado',
 };
