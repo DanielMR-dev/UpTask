@@ -11,7 +11,7 @@ dotenv.config();
 connectDB();
 
 const app = express(); // Generar la aplicacion de express
-// app.use(cors(corsConfig)); // Se permite la conexión por cors con la configuración establecida
+app.use(cors(corsConfig)); // Se permite la conexión por cors con la configuración establecida
 
 // Loggin
 app.use(morgan("dev")); // Se permite la conexión por morgan con la configuración estable
