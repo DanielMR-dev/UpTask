@@ -1,5 +1,7 @@
 import { Task } from "@/types/index";
 import TaskCard from "./TaskCard";
+import { statusTranslations } from "@/locales/es";
+
 
 type TaskListProps = {
     tasks: Task[];
@@ -18,14 +20,6 @@ const intialStatusGroups : GroupedTasks = {
     completed: [],
 }
 
-// Diccionario para traducir los estados de las tareas
-const statusTranslations: {[key:string] : string} = { // Las keys y los valores son strings
-    pending: 'Pendiente', 
-    onHold: 'En Espera',
-    inProgress: 'En Progreso',
-    underReview: 'En Revision',
-    completed: 'Completado',
-}
 
 // Diccionario de colores
 const statusStyles: {[key:string] : string} = { // Las keys y los valores son strings

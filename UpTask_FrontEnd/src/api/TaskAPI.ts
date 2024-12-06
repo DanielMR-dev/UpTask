@@ -19,7 +19,7 @@ export async function createTask({formData, projectId} : Pick<TaskAPI, 'formData
         if(isAxiosError(error) && error.response) {
             throw new Error(error.response.data.error); // Si el error es de axios y tiene una respuesta, se lanza un error con el mensaje de error
         };
-    }
+    };
 };
 
 // Obtener la Tarea por su ID - GET BY ID
@@ -35,7 +35,7 @@ export async function getTaskById({projectId, taskId} : Pick<TaskAPI, 'projectId
         if(isAxiosError(error) && error.response) {
             throw new Error(error.response.data.error); // Si el error es de axios y tiene una respuesta, se lanza un error con el mensaje de error
         };
-    }  
+    };  
 };
 
 // Actualizar la Tarea - PUT
@@ -48,7 +48,7 @@ export async function updateTask({projectId, taskId, formData} : Pick<TaskAPI, '
         if(isAxiosError(error) && error.response) {
             throw new Error(error.response.data.error); // Si el error es de axios y tiene una respuesta, se lanza un error con el mensaje de error
         };
-    }  
+    };  
 };
 
 // Eliminar Tarea - DELETE
@@ -61,5 +61,5 @@ export async function deleteTask({projectId, taskId} : Pick<TaskAPI, 'projectId'
         if(isAxiosError(error) && error.response) {
             throw new Error(error.response.data.error); // Si el error es de axios y tiene una respuesta, se lanza un error con el mensaje de error
         };
-    }  
+    };  
 };
