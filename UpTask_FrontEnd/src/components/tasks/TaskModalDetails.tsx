@@ -1,18 +1,39 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { getTaskById } from '@/api/TaskAPI';
+import { toast } from 'react-toastify';
 
 
 export default function TaskModalDetails() {
+
+    // Obtener projectId
+    const params = useParams();
+    const projectId = params.projectId!; // Obtener projectId desde la URL
 
     const navigate = useNavigate();
 
     const location = useLocation(); // Obtener la ruta actual
     const queryParams = new URLSearchParams(location.search); // Obtener los parámetros de la URL
-    const taskId = queryParams.get('viewTask'); // Obtener el ID del task que se está viendo
+    const taskId = queryParams.get('viewTask')!; // Obtener el ID del task que se está viendo
 
     const show = taskId ? true : false; // Mostrar el modal si hay un ID de task
+
+    const { data, isError, error } = useQuery({
+        queryKey: ['task', taskId], // Clave de la caché
+        queryFn: () => getTaskById({projectId, taskId}),
+        enabled: !!taskId, // Solo realizar la consulta si taskId existe
+        retry: false
+    });
+
+    if(isError) {
+        toast.error(error.message, { toastId: 'error' }); // Mostrar un mensaje de error y con toastId se crea un id para no mostrar toast adicionales
+        return <Navigate to={`/projects/${projectId}`} />; // Redirigir a la página de proyectos si hay un error
+    };
   
+    console.log(data);
+
     return (
         <>
             <Transition appear show={show} as={Fragment}>
