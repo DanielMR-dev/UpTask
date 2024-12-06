@@ -1,25 +1,51 @@
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Task, TaskFormData } from '@/types/index';
 import { useForm } from 'react-hook-form';
 import TaskForm from './TaskForm';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { updateTask } from '@/api/TaskAPI';
+import { toast } from 'react-toastify';
 
 type EditTaskModalProps = {
     data: Task;
+    taskId: Task['_id'];
 };
 
-export default function EditTaskModal({data} : EditTaskModalProps) {
+export default function EditTaskModal({data, taskId} : EditTaskModalProps) {
 
     const navigate = useNavigate(); // Se utilizará para eliminar el query string y redirigir al usuario
+
+    // Obtener projectId
+    const params = useParams();
+    const projectId = params.projectId!; // Obtener projectId desde la URL
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm<TaskFormData>({defaultValues: {
         name: data.name,
         description: data.description,
     } });
 
-    const handleEditTask = (formData: TaskFormData) => {
+    const queryClient = useQueryClient(); // Se utiliza para obtener/reiniciar la cache de la aplicación
 
+    // Con el Hook de useMutation nos encargamos de realizar la actualización de la tarea
+    const { mutate } = useMutation({
+        mutationFn: updateTask,
+        onError: (error) => {
+            toast.error(error.message);
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({queryKey: ['editProject', projectId]}); // Reiniciar el Query del proyecto donde nos encontramos modificando tareas
+            toast.success(data);
+            reset(); // Reinicia el formulario
+            navigate(location.pathname, {replace : true}); // Cierra la ventana Modal
+        }
+    });
+
+    // Administrar la actualización del formulario
+    const handleEditTask = (formData: TaskFormData) => {
+        const data = { projectId, taskId, formData }
+        mutate(data);
     };
 
     return (

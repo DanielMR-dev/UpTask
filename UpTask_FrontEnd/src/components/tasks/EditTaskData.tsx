@@ -1,6 +1,6 @@
 import { getTaskById } from "@/api/TaskAPI";
 import { useQuery } from "@tanstack/react-query";
-import { useLocation, useParams } from "react-router-dom";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 import EditTaskModal from "./EditTaskModal";
 
 export default function EditTaskData() {
@@ -11,12 +11,14 @@ export default function EditTaskData() {
     const queryParams = new URLSearchParams(location.search); // Obtiene los parámetros de la URL
     const taskId = queryParams.get('editTask')!; // "!" asegura que solo sea string
 
-    const { data } = useQuery({
+    const { data, isError } = useQuery({
         queryKey: ['task', taskId],
         queryFn: () => getTaskById({projectId, taskId}),
         // Con base en una condición se activa o no la consulta
         enabled: !!taskId // Solo se ejecuta si taskId es true, solo es true si tiene algo
     });
 
-    if(data) return <EditTaskModal data={data} />
+    if(isError) return <Navigate to={'/404'} />
+
+    if(data) return <EditTaskModal data={data} taskId={taskId} />
 };

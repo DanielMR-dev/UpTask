@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 
 export default function AddTaskModal() {
 
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Se utilizará para eliminar el query string y redirigir al usuario
 
     // Revisar si existe ventana Modal
     const location = useLocation(); // Permite leer datos desde la URL
@@ -30,7 +30,7 @@ export default function AddTaskModal() {
     // Validaciones y valores del formulario 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({defaultValues: initialValues});
 
-    const queryClient = useQueryClient(); // 
+    const queryClient = useQueryClient(); // Se utiliza para obtener/reiniciar la cache de la aplicación
 
     // Usar useMutation para cuando se agrega una tarea
     const { mutate } = useMutation({
