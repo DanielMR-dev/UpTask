@@ -44,7 +44,7 @@ export default function EditTaskModal({data, taskId} : EditTaskModalProps) {
 
     // Administrar la actualización del formulario
     const handleEditTask = (formData: TaskFormData) => {
-        const data = { projectId, taskId, formData }
+        const data = { projectId, taskId, formData };
         mutate(data);
     };
 

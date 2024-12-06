@@ -14,7 +14,7 @@ export default function ProjectDetailsView() {
     
     // Traer los proyectos desde la API
     const { data, isLoading, isError } = useQuery({
-        queryKey: ['editProject', projectId], // El queryKey es un array que identifica la query
+        queryKey: ['project', projectId], // El queryKey es un array que identifica la query
         queryFn: () => getProjectById(projectId), // Cuando se tienen que enviar parámetros a la funcion de queryFn se usa la sintáxis de callBack
         retry: false // Si se quiere que se vuelva a intentar la query si falla
     });
