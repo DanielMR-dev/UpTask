@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/User";
-import { hashPassword } from "../utils/auth";
+import { checkPassword, hashPassword } from "../utils/auth";
 import Token from "../models/Token";
 import { generateToken } from "../utils/token";
 import { AuthEmail } from "../emails/AuthEmail";
@@ -83,7 +83,7 @@ export class AuthController {
                 const error = new Error('Usuario no encontrado');
                 res.status(404).json({error: error.message});
                 return;
-            }
+            };
             if(!user.confirmed) { // Si el usuario no ha confirmado su cuenta
                 const token = new Token(); // Generar una nueva instacia de Token
                 token.user = user.id; // Asignar el id del usuario al token
@@ -101,9 +101,17 @@ export class AuthController {
                 const error = new Error('La cuenta no ha sido confirmada, hemos enviado un e-mail de confirmación');
                 res.status(401).json({error: error.message});
                 return;
-            }
+            };
 
-            console.log(user);
+            // Revisar password
+            const isPasswordCorrect = await checkPassword(password, user.password); // Revisar si la contraseña es correcta
+            if(!isPasswordCorrect) {
+                const error = new Error('Password Incorrecto');
+                res.status(401).json({error: error.message});
+                return;
+            };
+
+            res.send('Autenticado...');
 
         } catch (error) {
             console.log(error);
