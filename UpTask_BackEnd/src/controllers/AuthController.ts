@@ -4,6 +4,7 @@ import User from "../models/User";
 import { hashPassword } from "../utils/auth";
 import Token from "../models/Token";
 import { generateToken } from "../utils/token";
+import { transporter } from "../config/nodemailer";
 
 export class AuthController {
 
@@ -31,6 +32,15 @@ export class AuthController {
             const token = new Token(); // Se genera una nueva instancia con el Schema de Token
             token.token = generateToken(); // Se genera el token de 6 dígitos
             token.user = user.id; // Se asigna el usuario al que le pertenece el Token
+
+            // Enviar el email
+            await transporter.sendMail({
+                from: 'UpTask <admin@uptask.com>',
+                to: user.email,
+                subject: 'Bienvenido a UpTask - Confirma tu cuenta',
+                text: 'UpTask - Confirma tu cuenta',
+                html: `<p>Hola ${user.name}, confirma tu cuenta</p>`,
+            });
 
             await Promise.allSettled([user.save(), token.save()]); // Se guardan los datos del usuario y el token en la base de datos
 
