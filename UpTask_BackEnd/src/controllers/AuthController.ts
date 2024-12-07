@@ -15,7 +15,7 @@ export class AuthController {
             // Prevenir usuarios duplicados
             const userExist = await User.findOne({ email }); // Se busca el usuario en la base de datos
             if(userExist) { // Si el usuario existe
-                const error = new Error("El usuario ya existe");
+                const error = new Error('El usuario ya existe');
                 res.status(409).json({error: error.message});
                 return;
             };
@@ -37,7 +37,7 @@ export class AuthController {
                 email: user.email,
                 name: user.name,
                 token: token.token
-            })
+            });
 
             await Promise.allSettled([user.save(), token.save()]); // Se guardan los datos del usuario y el token en la base de datos
 
@@ -54,8 +54,8 @@ export class AuthController {
             const { token } = req.body; // Se obtiene el token del body
             const tokenExist = await Token.findOne({token}); // Se busca al token en la base de datos
             if(!tokenExist) { // Si el token NO existe
-                const error = new Error("Token no válido");
-                res.status(401).json({error: error.message});
+                const error = new Error('Token no válido');
+                res.status(404).json({error: error.message});
                 return;
             };
 
@@ -79,11 +79,31 @@ export class AuthController {
         try {
             const { email, password } = req.body; // Se obtienen el email y la contraseña del body
             const user = await User.findOne({ email }); // Se busca al usuario en la base de datos
-            if(!user) {
-                const error = new Error("Usuario no encontrado");
+            if(!user) { // Si el usuario no existe
+                const error = new Error('Usuario no encontrado');
+                res.status(404).json({error: error.message});
+                return;
+            }
+            if(!user.confirmed) { // Si el usuario no ha confirmado su cuenta
+                const token = new Token(); // Generar una nueva instacia de Token
+                token.user = user.id; // Asignar el id del usuario al token
+                token.token = generateToken(); // Generar nuevo token de 6 dígitos
+                await token.save(); // Guardar el token en la base de datos
+
+                // Enviar el email
+                AuthEmail.sendConfirmationEmail({
+                    email: user.email,
+                    name: user.name,
+                    token: token.token
+                });
+
+
+                const error = new Error('La cuenta no ha sido confirmada, hemos enviado un e-mail de confirmación');
                 res.status(401).json({error: error.message});
                 return;
             }
+
+            console.log(user);
 
         } catch (error) {
             console.log(error);
