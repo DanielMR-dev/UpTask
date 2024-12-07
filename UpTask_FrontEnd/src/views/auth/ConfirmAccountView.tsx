@@ -1,12 +1,27 @@
+import { useState } from "react";
 import { ConfirmToken } from "@/types/index";
 import { PinInput, PinInputField } from "@chakra-ui/pin-input";
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { confirmAccount } from "@/api/AuthAPI";
+import { toast } from "react-toastify";
 
 export default function ConfirmAccountView() {
 
     // State inicial de los campos para el token
     const [token, setToken] = useState<ConfirmToken['token']>('');
+
+    // La función de mutación para confirmar un usuario
+    const { mutate } = useMutation({
+        mutationFn: confirmAccount,
+        onError: (error) => {
+            toast.error(error.message);
+        },
+        onSuccess: (data) => {
+            toast.success(data);
+        }
+    });
+
 
     // Funcion para modificar el token en el State
     const handleChange = (token : ConfirmToken['token']) => { // Este token es el que se muestra en la pantalla
@@ -15,7 +30,7 @@ export default function ConfirmAccountView() {
 
     // Funcion para enviar el token y confirmar la cuenta
     const handleComplete = (token : ConfirmToken['token']) => { // Este token es el que se envia al servidor
-        console.log(token);
+        mutate({token}) // Se envia el token (como un objeto) al servidor
     };
 
     return (
