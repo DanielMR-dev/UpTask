@@ -20,7 +20,15 @@ router.post('/create-account',
     body('email')
         .isEmail().withMessage('E-mail no válido'), 
     handleInpoutErrors, // Si pasa la validación pasa al controlador, de lo contrario se de tiene la ejecución en el middleware
-    AuthController.createAccount
+    AuthController.createAccount // Si pasa la validación pasa al controlador para crear la cuenta
+);
+
+// Confirmar cuenta
+router.post('/confirm-account',
+    body('token')
+        .notEmpty().withMessage('El Token no puede ir vacio'),
+    handleInpoutErrors,
+    AuthController.confirmAccount
 );
 
 export default router;

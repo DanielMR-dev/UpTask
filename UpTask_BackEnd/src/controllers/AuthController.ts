@@ -47,4 +47,21 @@ export class AuthController {
             res.status(500).json({ error: 'Server Error' });
         }
     };
+
+    // CONFIRM
+    static confirmAccount = async (req: Request, res: Response) => {
+        try {
+            const { token } = req.body; // Se obtiene el token del body
+            const tokenExist = await Token.findOne({token}); // Se busca al token en la base de datos
+            if(!tokenExist) { // Si el token NO existe
+                const error = new Error("Token no válido");
+                res.status(401).json({error: error.message});
+                return;
+            };
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: 'Server Error' });
+        }
+    };
 };
