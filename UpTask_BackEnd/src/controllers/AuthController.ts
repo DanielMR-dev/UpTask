@@ -73,4 +73,21 @@ export class AuthController {
             res.status(500).json({ error: 'Server Error' });
         }
     };
+
+    // LOGIN
+    static login = async (req: Request, res: Response) => {
+        try {
+            const { email, password } = req.body; // Se obtienen el email y la contraseña del body
+            const user = await User.findOne({ email }); // Se busca al usuario en la base de datos
+            if(!user) {
+                const error = new Error("Usuario no encontrado");
+                res.status(401).json({error: error.message});
+                return;
+            }
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: 'Server Error' });
+        }
+    };
 };
