@@ -1,7 +1,22 @@
+import { ConfirmToken } from "@/types/index";
+import { PinInput, PinInputField } from "@chakra-ui/pin-input";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function ConfirmAccountView() {
 
+    // State inicial de los campos para el token
+    const [token, setToken] = useState<ConfirmToken['token']>('');
+
+    // Funcion para modificar el token en el State
+    const handleChange = (token : ConfirmToken['token']) => { // Este token es el que se muestra en la pantalla
+        setToken(token);
+    };
+
+    // Funcion para enviar el token y confirmar la cuenta
+    const handleComplete = (token : ConfirmToken['token']) => { // Este token es el que se envia al servidor
+        console.log(token);
+    };
 
     return (
         <>
@@ -16,6 +31,16 @@ export default function ConfirmAccountView() {
                 <label
                     className="font-normal text-2xl text-center block"
                 >Código de 6 dígitos</label>
+                <div className="flex justify-center gap-5">
+                    <PinInput value={token} onChange={handleChange} onComplete={handleComplete}>
+                        <PinInputField className="w-10 h-10 p-3 rounded-lg shadow-lg border-gray-300 border placeholder-white"/>
+                        <PinInputField className="w-10 h-10 p-3 rounded-lg shadow-lg border-gray-300 border placeholder-white"/>
+                        <PinInputField className="w-10 h-10 p-3 rounded-lg shadow-lg border-gray-300 border placeholder-white"/>
+                        <PinInputField className="w-10 h-10 p-3 rounded-lg shadow-lg border-gray-300 border placeholder-white"/>
+                        <PinInputField className="w-10 h-10 p-3 rounded-lg shadow-lg border-gray-300 border placeholder-white"/>
+                        <PinInputField className="w-10 h-10 p-3 rounded-lg shadow-lg border-gray-300 border placeholder-white"/>
+                    </PinInput>
+                </div>
 
             </form>
 
