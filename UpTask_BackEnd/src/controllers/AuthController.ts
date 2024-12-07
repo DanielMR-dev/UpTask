@@ -59,6 +59,15 @@ export class AuthController {
                 return;
             };
 
+            const user = await User.findById(tokenExist.user); // Se busca al usuario al que le pertenece el token
+            user.confirmed = true; // Se confirma la cuenta del usuario
+
+            await Promise.allSettled([ 
+                user.save(), // Se guardan los datos del usuario en la base de datos
+                tokenExist.deleteOne() // Se elimina el token de la base de datos
+            ]); 
+
+            res.send('Cuenta confirmada correctamente');
         } catch (error) {
             console.log(error);
             res.status(500).json({ error: 'Server Error' });
