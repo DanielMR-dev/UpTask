@@ -1,7 +1,10 @@
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import { UserRegistrationForm } from "@/types/index";
 import ErrorMessage from "@/components/ErrorMessage";
-import { Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { createAccount } from "@/api/AuthAPI";
+import { toast } from "react-toastify";
 
 export default function RegisterView() {
   
@@ -14,9 +17,23 @@ export default function RegisterView() {
 
     const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<UserRegistrationForm>({ defaultValues: initialValues });
 
+    // La función de mutación para crear un nuevo usuario
+    const { mutate } = useMutation({
+        mutationFn: createAccount,
+        onError: (error) => {
+            toast.error(error.message);
+        },
+        onSuccess: (data) => {
+            toast.success(data);
+            reset();
+        }
+    });
+
+    // Con la función de "watch" revisamos que el campo de password coincida con el de repetir password
     const password = watch('password');
 
-    const handleRegister = (formData: UserRegistrationForm) => {}
+    // Funcion encargada de administrar el registro
+    const handleRegister = (formData: UserRegistrationForm) => mutate(formData); // Llama a la función de mutación
 
     return (
         <>
@@ -42,11 +59,11 @@ export default function RegisterView() {
                         placeholder="Email de Registro"
                         className="w-full p-3  border-gray-300 border"
                         {...register("email", {
-                        required: "El Email de registro es obligatorio",
-                        pattern: {
-                            value: /\S+@\S+\.\S+/,
-                            message: "E-mail no válido",
-                        },
+                            required: "El Email de registro es obligatorio",
+                            pattern: {
+                                value: /\S+@\S+\.\S+/,
+                                message: "E-mail no válido",
+                            },
                         })}
                     />
                     {errors.email && (
