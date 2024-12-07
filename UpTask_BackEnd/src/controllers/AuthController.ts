@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 
 import User from "../models/User";
 import { hashPassword } from "../utils/auth";
+import Token from "../models/Token";
+import { generateToken } from "../utils/token";
 
 export class AuthController {
 
@@ -25,7 +27,12 @@ export class AuthController {
             // Hashear Password
             user.password = await hashPassword(password); // Se usa la función hashPassword para hashear el password
 
-            await user.save(); // Se guarda el usuario en la base de datos
+            // Generar el Token
+            const token = new Token(); // Se genera una nueva instancia con el Schema de Token
+            token.token = generateToken(); // Se genera el token de 6 dígitos
+            token.user = user.id; // Se asigna el usuario al que le pertenece el Token
+
+            await Promise.allSettled([user.save(), token.save()]); // Se guardan los datos del usuario y el token en la base de datos
 
             res.send('Cuenta creada correctamente, revisa tu email para confirmarla');
         } catch (error) {
