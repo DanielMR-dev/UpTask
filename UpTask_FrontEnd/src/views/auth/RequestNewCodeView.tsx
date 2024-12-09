@@ -21,6 +21,7 @@ export default function RegisterView() {
         },
         onSuccess: (data) => {
             toast.success(data);
+            reset();
         }
     });
 
@@ -66,7 +67,7 @@ export default function RegisterView() {
                 <input
                     type="submit"
                     value='Enviar Código'
-                    className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 rounded-lg text-white font-black  text-xl cursor-pointer"
+                    className="bg-fuchsia-600 hover:bg-fuchsia-700 w-full p-3 rounded-lg text-white font-black  text-xl cursor-pointer transition-colors shadow-lg"
                 />
             </form>
 

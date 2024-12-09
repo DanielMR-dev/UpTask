@@ -187,7 +187,7 @@ export class AuthController {
             });
 
             
-            res.send('Se envió un nuevo código de confirmación a tu correo electrónico.');
+            res.send('Revisa tu email para instrucciones');
         } catch (error) {
             console.log(error);
             res.status(500).json({ error: 'Server Error' });

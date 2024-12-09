@@ -40,12 +40,12 @@ export default function RegisterView() {
             <h1 className="text-5xl font-black text-white">Crear Cuenta</h1>
             <p className="text-2xl font-light text-white mt-5">
                 Llena el formulario para {''}
-                <span className=" text-fuchsia-500 font-bold"> crear tu cuenta</span>
+                <span className=" text-fuchsia-500 font-bold"> crear tu cuenta ahora mismo</span>
             </p>
 
             <form
                 onSubmit={handleSubmit(handleRegister)}
-                className="space-y-8 p-10  bg-white mt-10 shadow-lg rounded-lg"
+                className="space-y-8 p-10 bg-white mt-10 shadow-lg rounded-lg"
                 noValidate
             >
                 <div className="flex flex-col gap-5">
@@ -143,6 +143,11 @@ export default function RegisterView() {
                     to={'/auth/login'}
                     className="text-center text-gray-300 font-normal"
                 >¿Ya tienes cuenta? Inicia Sesión</Link>
+
+                <Link
+                    to={'/auth/forgot-password'}
+                    className="text-center text-gray-300 font-normal"
+                >¿Olvidaste tu contraseña? Reestablecer</Link>
             </nav>
         </>
     )
