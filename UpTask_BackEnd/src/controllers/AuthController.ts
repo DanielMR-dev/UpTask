@@ -193,4 +193,22 @@ export class AuthController {
             res.status(500).json({ error: 'Server Error' });
         }
     };
+
+    // Validar Token
+    static validateToken = async (req: Request, res: Response) => {
+        try {
+            const { token } = req.body; // Se obtiene el token del body
+            const tokenExist = await Token.findOne({token}); // Se busca al token en la base de datos
+            if(!tokenExist) { // Si el token NO existe
+                const error = new Error('Token no válido');
+                res.status(404).json({error: error.message});
+                return;
+            };
+
+            res.send('Token válido, define tu nuevo Password');
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: 'Server Error' });
+        }
+    };
 };
