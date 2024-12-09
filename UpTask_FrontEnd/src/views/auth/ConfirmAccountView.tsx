@@ -29,9 +29,7 @@ export default function ConfirmAccountView() {
     };
 
     // Funcion para enviar el token y confirmar la cuenta
-    const handleComplete = (token : ConfirmToken['token']) => { // Este token es el que se envia al servidor
-        mutate({token}) // Se envia el token (como un objeto) al servidor
-    };
+    const handleComplete = (token : ConfirmToken['token']) =>  mutate({token}); // Se envia el token (como un objeto) al servidor
 
     return (
         <>
