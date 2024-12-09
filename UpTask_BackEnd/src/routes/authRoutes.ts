@@ -42,11 +42,11 @@ router.post('/login',
 );
 
 // Reenviar código de confirmación
-router.post('/request-code',
+router.post('/forgot-password',
     body('email')
         .isEmail().withMessage('E-mail no válido'), 
     handleInpoutErrors,
-    AuthController.requestConfirmationCode
+    AuthController.forgotPassword
 );
 
 export default router;

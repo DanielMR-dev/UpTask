@@ -8,6 +8,7 @@ interface IEmail {
 
 export class AuthEmail {
 
+    // Enviar Email de confirmación
     static sendConfirmationEmail = async ( user : IEmail ) => {
         const info = await transporter.sendMail({
             from: 'UpTask <admin@uptask.com>',
@@ -23,5 +24,23 @@ export class AuthEmail {
         });
 
         console.log('Email enviado', info.messageId);
-    }
+    };
+
+    // Enviar código de recuperación
+    static sendPasswordResetToken = async ( user : IEmail ) => {
+        const info = await transporter.sendMail({
+            from: 'UpTask <admin@uptask.com>',
+            to: user.email,
+            subject: 'Bienvenido a UpTask - Resstablece tu Password',
+            text: 'UpTask - Resstablece tu Password',
+            html: `<p>Hola ${user.name}, has solicitado reestablecer tu password.</p>
+            <p>Visita el siguiente enlace:</p>
+            <a href="${process.env.FRONTEND_URL}/auth/new-password">Reestablecer Password</a>
+            <p>Ingresa el código: <b>${user.token}</b></p>
+            <p>Este token expira en 10 minutos</p>
+            `,
+        });
+
+        console.log('Email enviado', info.messageId);
+    };
 };

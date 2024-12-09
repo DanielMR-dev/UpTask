@@ -7,7 +7,7 @@ import { AuthEmail } from "../emails/AuthEmail";
 
 export class AuthController {
 
-    // CREATE
+    // Crear cuenta
     static createAccount = async (req: Request, res: Response) => {
         try {
             const { password, email } = req.body; // Se obtiene el password del body
@@ -48,7 +48,7 @@ export class AuthController {
         }
     };
 
-    // CONFIRM
+    // Confirmar Cuenta
     static confirmAccount = async (req: Request, res: Response) => {
         try {
             const { token } = req.body; // Se obtiene el token del body
@@ -74,7 +74,7 @@ export class AuthController {
         }
     };
 
-    // LOGIN
+    // Login
     static login = async (req: Request, res: Response) => {
         try {
             const { email, password } = req.body; // Se obtienen el email y la contraseña del body
@@ -119,6 +119,7 @@ export class AuthController {
         }
     };
 
+    // Enviar código de confirmación
     static requestConfirmationCode = async (req: Request, res: Response) => {
         try {
             const { email } = req.body; // Se obtiene el password del body
@@ -136,7 +137,7 @@ export class AuthController {
                 const error = new Error('El usuario ya está confirmado');
                 res.status(403).json({error: error.message});
                 return;
-            }
+            };
 
             // Generar el Token
             const token = new Token(); // Se genera una nueva instancia con el Schema de Token
@@ -152,6 +153,40 @@ export class AuthController {
 
             await Promise.allSettled([user.save(), token.save()]); // Se guardan los datos del usuario y el token en la base de datos
 
+            res.send('Se envió un nuevo código de confirmación a tu correo electrónico.');
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: 'Server Error' });
+        }
+    };
+
+    // Reestablecer contraseña
+    static forgotPassword = async (req: Request, res: Response) => {
+        try {
+            const { email } = req.body; // Se obtiene el password del body
+
+            // Buscar al usuario por su email
+            const user = await User.findOne({ email }); // Se busca el usuario en la base de datos
+            if(!user) { // Si el usuario existe
+                const error = new Error('El usuario no está registrado');
+                res.status(404).json({error: error.message});
+                return;
+            };
+
+            // Generar el Token
+            const token = new Token(); // Se genera una nueva instancia con el Schema de Token
+            token.token = generateToken(); // Se genera el token de 6 dígitos
+            token.user = user.id; // Se asigna el usuario al que le pertenece el Token
+            await token.save(); // Se guarda el token en la base de datos
+
+            // Enviar el email
+            AuthEmail.sendPasswordResetToken({
+                email: user.email,
+                name: user.name,
+                token: token.token
+            });
+
+            
             res.send('Se envió un nuevo código de confirmación a tu correo electrónico.');
         } catch (error) {
             console.log(error);
