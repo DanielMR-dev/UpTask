@@ -5,6 +5,7 @@ import { handleInpoutErrors } from "../middleware/validation";
 import { TaskController } from "../controllers/TaskController";
 import { projectExist } from "../middleware/project";
 import { taskBelongsToProject, taskExist } from "../middleware/task";
+import { authenticate } from "../middleware/auth";
 
 const router = Router();
 
@@ -12,6 +13,7 @@ const router = Router();
 
 // Crear un nuevo proyecto
 router.post('/', 
+    authenticate,
     body('projectName')
         .notEmpty().withMessage('El Nombre del Projecto es Obligatorio'),
     body('clientName')

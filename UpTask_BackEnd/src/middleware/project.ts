@@ -16,7 +16,7 @@ export async function projectExist(req : Request, res: Response, next: NextFunct
 
         if(!project) { // Si no se encuentra el projecto se ejecuta el siguiente código
             const error = new Error("Proyecto NO Encontrado");
-            res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
+            res.status(404).json({ error: error.message }); 
             return;
         };
         req.project = project; // Se agrega el proyecto a la solicitud
