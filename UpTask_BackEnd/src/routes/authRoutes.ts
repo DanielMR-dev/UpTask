@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { AuthController } from "../controllers/AuthController";
 import { handleInpoutErrors } from "../middleware/validation";
 
@@ -55,6 +55,22 @@ router.post('/validate-token',
         .notEmpty().withMessage('El Token no puede ir vacio'),
     handleInpoutErrors,
     AuthController.validateToken
+);
+
+// Actualizar Password
+router.post('/update-password/:token',
+    param('token')
+        .isNumeric().withMessage('Token no válido'),
+    body('password')
+        .isLength({min: 8}).withMessage('El Password es muy corto, mínimo 8 caracteres'),
+    body('password_confirmation').custom((value, {req}) => {
+        if(value !== req.body.password) {
+            throw new Error('Los Password no coinciden');
+        };
+        return true;
+    }),
+    handleInpoutErrors,
+    AuthController.updatePasswordWithToken
 );
 
 export default router;

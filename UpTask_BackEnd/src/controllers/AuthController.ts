@@ -211,4 +211,30 @@ export class AuthController {
             res.status(500).json({ error: 'Server Error' });
         }
     };
+
+    // Actualizar Password
+    static updatePasswordWithToken = async (req: Request, res: Response) => {
+        try {
+            const { token } = req.params; // Se obtiene el token del body
+            const tokenExist = await Token.findOne({ token }); // Se busca al token en la base de datos
+            if(!tokenExist) { // Si el token NO existe
+                const error = new Error('Token no válido');
+                res.status(404).json({error: error.message});
+                return;
+            };
+
+            const user = await User.findById(tokenExist.user); // Se busca al usuario en la base de datos
+            const { password } = req.body; // Se obtiene el password del body
+            user.password = await hashPassword(password); // Se hashea el nuevo password
+
+            // Guardar al usuario y borrar el Token
+            await Promise.allSettled([user.save(), tokenExist.deleteOne()]);
+
+
+            res.send('El Password se ha actualizado correctamente');
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: 'Server Error' });
+        }
+    };
 };
