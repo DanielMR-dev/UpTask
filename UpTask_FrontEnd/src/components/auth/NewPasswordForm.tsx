@@ -1,19 +1,45 @@
-import type { NewPasswordForm } from "../../types";
+import type { ConfirmToken, NewPasswordForm } from "../../types";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import ErrorMessage from "@/components/ErrorMessage";
+import { useMutation } from "@tanstack/react-query";
+import { updatePasswordWithToken } from "@/api/AuthAPI";
+import { toast } from "react-toastify";
 
+type NewPasswordFormProps = {
+    token: ConfirmToken['token'];
+};
 
-export default function NewPasswordForm() {
-    const navigate = useNavigate()
+export default function NewPasswordForm({token} : NewPasswordFormProps ) {
+    const navigate = useNavigate();
     const initialValues: NewPasswordForm = {
         password: '',
         password_confirmation: '',
-    }
+    };
+
+    // Funcion de mutación encargada de llamar a la API para mutar los datos
+    const { mutate } = useMutation({
+        mutationFn: updatePasswordWithToken, // Función que se ejecuta cuando se hace la petición
+        onError: (error) => {
+            toast.error(error.message);
+        },
+        onSuccess: (data) => {
+            toast.success(data);
+            reset();
+            navigate('/auth/login');
+        }
+    });
+
     const { register, handleSubmit, watch, reset, formState: { errors } } = useForm({ defaultValues: initialValues });
 
 
-    const handleNewPassword = (formData: NewPasswordForm) => {}
+    const handleNewPassword = (formData: NewPasswordForm) => {
+        const data = { 
+            formData,
+            token
+        };
+        mutate(data); // Se envía el objeto con los datos del formulario y el token a la funcion de mutación
+    };
 
     const password = watch('password');
 

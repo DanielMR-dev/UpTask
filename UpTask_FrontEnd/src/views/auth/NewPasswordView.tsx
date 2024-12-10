@@ -18,7 +18,7 @@ export default function NewPasswordView() {
 
             {!isValidToken ? 
                 <NewPasswordToken token={token} setToken={setToken} setValidToken={setValidToken} /> : 
-                <NewPasswordForm />
+                <NewPasswordForm token={token} />
             }
 
         </>
