@@ -112,7 +112,7 @@ export class AuthController {
                 return;
             };
 
-            const token = generateJWT();
+            const token = generateJWT({id: user.id});
 
             res.send(token);
 
