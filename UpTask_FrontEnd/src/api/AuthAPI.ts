@@ -46,6 +46,7 @@ export async function authenticateUser(formData : UserLoginForm) {
     try {
         const url = '/auth/login'; // URL para autenticar al usuario
         const { data } = await api.post<string>(url, formData); // Envía la solicitud POST a la API con la URL y los datos del formulario
+        localStorage.setItem('AUTH_TOKEN', data); // Guardar el token en el almacenamiento local
         return data;
     } catch (error) {
         if(isAxiosError(error) && error.response) {
