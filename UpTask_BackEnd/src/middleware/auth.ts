@@ -1,6 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import User from "../models/User";
+import User, { IUser } from "../models/User";
+
+declare global {
+    namespace Express {
+        interface Request {
+            user?: IUser; // Agregar el Interface de User al Request
+        }
+    }
+}
 
 // Middleware para revisar que un usuario este autenticado
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
@@ -16,8 +24,13 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verificar el token
 
-        if(typeof decoded === 'object' && decoded.id) { // 
-            const user = await User.findById(decoded.id); // Buscar el usuario en la base de datos
+        if(typeof decoded === 'object' && decoded.id) { // Si el token es válido, verificar que el usuario exista
+            const user = await User.findById(decoded.id).select('id'); // Buscar el usuario en la base de datos
+            if(user) { // Si el usuario existe
+                req.user = user; // 
+            } else {
+                res.status(500).json({ error: 'Token No Válido' });
+            };
         }
     } catch (error) {
         res.status(500).json({ error: 'Token No Válido' });
