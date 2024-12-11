@@ -28,6 +28,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
             const user = await User.findById(decoded.id).select('id'); // Buscar el usuario en la base de datos
             if(user) { // Si el usuario existe
                 req.user = user; // Agregar el usuario al request
+                next();
             } else {
                 res.status(500).json({ error: 'Token No Válido' });
             };
@@ -35,6 +36,4 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     } catch (error) {
         res.status(500).json({ error: 'Token No Válido' });
     }
-
-    next();
 };

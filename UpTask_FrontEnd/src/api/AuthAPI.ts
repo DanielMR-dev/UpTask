@@ -93,3 +93,16 @@ export async function updatePasswordWithToken({formData, token} : {formData: New
         };
     };  
 };
+
+// Obtener el Usuario
+export async function getUser() {
+    try {
+        const { data } = await api.get('/auth/user');
+        console.log(data);
+        return data;
+    } catch (error) {
+        if(isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error); // Si el error es de axios y tiene una respuesta, se lanza un error con el mensaje de error
+        };
+    }  
+};
