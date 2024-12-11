@@ -71,6 +71,12 @@ export class ProjectController { // El controlador se encarga de manejar las pet
                 return;
             };
 
+            if( project.manager.toString() !== req.user.id.toString() ) {
+                const error = new Error('Solo el Manager puede actualizar un proyecto');
+                res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
+                return;
+            };
+
             project.clientName = req.body.clientName; // Se actualiza el nombre del cliente
             project.projectName = req.body.projectName; // Se actualiza el nombre del proyecto
             project.description = req.body.description; // Se actualiza la descripción del proyecto
@@ -91,6 +97,12 @@ export class ProjectController { // El controlador se encarga de manejar las pet
 
             if(!project) {
                 const error = new Error('Proyecto no encontrado');
+                res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
+                return;
+            };
+
+            if( project.manager.toString() !== req.user.id.toString() ) {
+                const error = new Error('Solo el Manager puede eliminar un proyecto');
                 res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
                 return;
             };
