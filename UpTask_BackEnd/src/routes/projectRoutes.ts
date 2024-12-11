@@ -25,7 +25,7 @@ router.post('/',
 );
 
 // Obtener todos los proyectos
-router.get('/', ProjectController.getAllProjects);
+router.get('/', authenticate, ProjectController.getAllProjects);
 
 // Obtener un proyecto por id
 router.get('/:id', 

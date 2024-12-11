@@ -22,7 +22,11 @@ export class ProjectController { // El controlador se encarga de manejar las pet
     // GET ALL
     static getAllProjects = async (req: Request, res: Response) => {
         try {
-            const projects = await Project.find({}); // Con find se buscan todos los proyectos en la DB
+            const projects = await Project.find({
+                $or: [
+                    { manager: { $in: req.user.id }} // Traer SOLO los proyectos que el usuario tenga permiso para ver
+                ]
+            }); // Con find se buscan todos los proyectos en la DB
             res.json(projects); // Se envían los proyectos en formato JSON
         } catch (error) {
             console.log(error);
