@@ -6,6 +6,10 @@ export class ProjectController { // El controlador se encarga de manejar las pet
     // CREATE
     static createProject = async (req: Request, res: Response) => {
         const project = new Project(req.body); // Creamos un nuevo proyecto con los datos del cuerpo de la petición
+
+        // Asignar un Manager
+        project.manager = req.user.id; // Asignamos el id del usuario que está haciendo la petición como manager del proyecto
+
         try {
             await project.save(); // Con save se guarda el projecto en la DB
             res.send('Proyecto Creado Correctamente');
