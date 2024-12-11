@@ -9,6 +9,7 @@ export interface IProject extends Document {
     description: string;
     tasks: PopulatedDoc<ITask & Document>[]; // Un projecto con múltiples tareas
     manager: PopulatedDoc<IUser & Document>; // Solo un manager por proyecto
+    team: PopulatedDoc<IUser & Document>[]; // Un equipo con múltiples usuarios
 };
 
 // Definir el Schema para Mongoose
@@ -37,7 +38,13 @@ const projectSchema: Schema = new Schema({
     manager : {
         type: Types.ObjectId,
         ref: 'User'
-    }
+    },
+    team: [ // Un array de tareas
+        {
+            type: Types.ObjectId,
+            ref: 'User'
+        }
+    ],
 }, {timestamps: true});
 
 // Definir el Modelo para Mongoose
