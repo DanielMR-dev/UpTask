@@ -3,12 +3,21 @@ import { Popover, Transition } from '@headlessui/react';
 import { Bars3Icon } from '@heroicons/react/20/solid';
 import { Link } from 'react-router-dom';
 import { User } from '../types';
+import { useQueryClient } from '@tanstack/react-query';
 
 type NavMenuProps = {
 	name: User['name']
 };
 
 export default function NavMenu({name} : NavMenuProps) {
+
+	const queryClient = useQueryClient();
+
+	// Función para Cerrar Sesión
+	const handleLogout = () => {
+		localStorage.removeItem('AUTH_TOKEN');
+		queryClient.invalidateQueries({queryKey: ['user']}); // Invalidar la petición del usuario
+	};
 
 	return (
 		<Popover className="relative">
@@ -39,7 +48,7 @@ export default function NavMenu({name} : NavMenuProps) {
 				<button
 					className='block p-2 hover:text-purple-950'
 					type='button'
-					onClick={() => { }}
+					onClick={handleLogout}
 				>
 				Cerrar Sesión
 				</button>
