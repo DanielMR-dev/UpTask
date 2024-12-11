@@ -11,9 +11,11 @@ const router = Router();
 
 // ROUTES PARA LOS PROYECTOS
 
+// Autenticar todas la rutas
+router.use(authenticate);
+
 // Crear un nuevo proyecto
 router.post('/', 
-    authenticate,
     body('projectName')
         .notEmpty().withMessage('El Nombre del Projecto es Obligatorio'),
     body('clientName')
@@ -25,7 +27,7 @@ router.post('/',
 );
 
 // Obtener todos los proyectos
-router.get('/', authenticate, ProjectController.getAllProjects);
+router.get('/', ProjectController.getAllProjects);
 
 // Obtener un proyecto por id
 router.get('/:id', 

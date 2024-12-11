@@ -46,6 +46,12 @@ export class ProjectController { // El controlador se encarga de manejar las pet
                 return;
             };
 
+            if( project.manager.toString() !== req.user.id.toString() ) {
+                const error = new Error('Acción no válida');
+                res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
+                return;
+            };
+
             res.json(project); // Se envía el proyecto en formato JSON
         } catch (error) {
             console.log(error);
