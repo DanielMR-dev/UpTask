@@ -16,8 +16,13 @@ export async function createProject(formData : ProjectFormData) {
 
 // Obtener todos los proyectos - GET
 export async function getProjects() {
+    const token = localStorage.getItem('AUTH_TOKEN');
     try {
-        const { data } = await api.get('/projects'); // Se envía la petición GET por medio de la API
+        const { data } = await api.get('/projects', {
+            headers: {
+                Authorization : `Bearer ${token}` // Inyectar el Token 
+            }
+        }); // Se envía la petición GET por medio de la API
         const response = dashBoardProjectSchema.safeParse(data); // Se parsea la respuesta para verificar que cumpla con el schema
         if(response.success) { 
             return response.data;

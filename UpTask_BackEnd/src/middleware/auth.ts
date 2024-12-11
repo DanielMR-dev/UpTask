@@ -22,7 +22,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     const [, token] = bearer.split(" "); // Obtener el token usando array destructuring
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verificar el token
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string); // Verificar el token
 
         if(typeof decoded === 'object' && decoded.id) { // Si el token es válido, verificar que el usuario exista
             const user = await User.findById(decoded.id).select('id'); // Buscar el usuario en la base de datos
