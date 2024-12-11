@@ -25,7 +25,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string); // Verificar el token
 
         if(typeof decoded === 'object' && decoded.id) { // Si el token es válido, verificar que el usuario exista
-            const user = await User.findById(decoded.id).select('id'); // Buscar el usuario en la base de datos
+            const user = await User.findById(decoded.id); // Buscar el usuario en la base de datos
             if(user) { // Si el usuario existe
                 req.user = user; // Agregar el usuario al request
                 next();
