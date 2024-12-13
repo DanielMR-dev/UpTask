@@ -24,7 +24,8 @@ export class ProjectController { // El controlador se encarga de manejar las pet
         try {
             const projects = await Project.find({
                 $or: [
-                    { manager: { $in: req.user.id }} // Traer SOLO los proyectos que el usuario tenga permiso para ver
+                    { manager: { $in: req.user.id }}, // Traer SOLO los proyectos que el usuario tenga permiso para ver
+                    { team: { $in: req.user.id } }, // Si el usuario pertenece a ese equipo también le muestra el proyecto
                 ]
             }); // Con find se buscan todos los proyectos en la DB
             res.json(projects); // Se envían los proyectos en formato JSON
@@ -46,7 +47,7 @@ export class ProjectController { // El controlador se encarga de manejar las pet
                 return;
             };
 
-            if( project.manager.toString() !== req.user.id.toString() ) {
+            if( project.manager.toString() !== req.user.id.toString() && !project.team.includes(req.user.id) ) {
                 const error = new Error('Acción no válida');
                 res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
                 return;
