@@ -117,7 +117,12 @@ router.post('/:projectId/tasks/:taskId/status',
 
 // RUTAS PARA LOS EQUIPOS
 
-// Obtener los miembros de un equipo
+// Obtener todos los equipos de un proyecto
+router.get('/:projectId/team',
+    TeamMemberController.getProjectTeam
+);
+
+// Encontrar usuario
 router.post('/:projectId/team/find',
     body('email')
         .isEmail().toLowerCase().withMessage('Email no válido'),
