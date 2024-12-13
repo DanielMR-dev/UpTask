@@ -61,3 +61,12 @@ export const dashBoardProjectSchema = z.array(
 );
 export type Project = z.infer<typeof projectSchema>; // Genera el type de Project con el Schema de projectSchema
 export type ProjectFormData = Pick<Project, 'projectName' | 'clientName' | 'description'>; // Genera el type de ProjectFormData con los campos que se van a enviar en el formulario
+
+// Team
+export const teamMemberSchema = userSchema.pick({
+    name: true,
+    email: true,
+    _id: true,
+});
+export type TeamMember = z.infer<typeof teamMemberSchema>; // Genera el type de TeamMember con el Schema de teamMemberSchema
+export type TeamMemberForm = Pick<TeamMember, 'email'>; // Genera el type de TeamMemberForm con los campos que se van a enviar en el formulario
