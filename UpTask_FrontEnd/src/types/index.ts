@@ -68,5 +68,6 @@ export const teamMemberSchema = userSchema.pick({
     email: true,
     _id: true,
 });
+export const teamMembersSchema = z.array(teamMemberSchema); // 
 export type TeamMember = z.infer<typeof teamMemberSchema>; // Genera el type de TeamMember con el Schema de teamMemberSchema
 export type TeamMemberForm = Pick<TeamMember, 'email'>; // Genera el type de TeamMemberForm con los campos que se van a enviar en el formulario

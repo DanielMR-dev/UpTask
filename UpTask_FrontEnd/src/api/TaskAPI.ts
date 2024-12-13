@@ -31,7 +31,7 @@ export async function getTaskById({projectId, taskId} : Pick<TaskAPI, 'projectId
         const response = taskSchema.safeParse(data); // Se parsea la respuesta para verificar que sea válida
         if(response.success) {
             return response.data;
-        }
+        };
     } catch (error) {
         if(isAxiosError(error) && error.response) {
             throw new Error(error.response.data.error); // Si el error es de axios y tiene una respuesta, se lanza un error con el mensaje de error
