@@ -125,6 +125,7 @@ router.post('/:projectId/team/find',
     TeamMemberController.findUserByEmail
 );
 
+// Agregar un miembro a un equipo
 router.post('/:projectId/team',
     body('id')
         .isMongoId().withMessage('ID no válido'),
@@ -132,5 +133,12 @@ router.post('/:projectId/team',
     TeamMemberController.addUserById
 );
 
+// Eliminar un miembro de un equipo
+router.delete('/:projectId/team',
+    body('id')
+        .isMongoId().withMessage('ID no válido'),
+    handleInpoutErrors,
+    TeamMemberController.removeUserById
+);
 
 export default router;
