@@ -20,7 +20,7 @@ export class TeamMemberController {
         const project = await Project.findById(req.project.id).populate({
             path: 'team',
             select: 'id email name'
-        }); // 
+        }); // Buscar el proyecto con el id proporcionado y obtener el equipo
         res.json(project.team);
     };
 
