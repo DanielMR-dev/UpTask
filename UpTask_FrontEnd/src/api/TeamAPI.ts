@@ -19,7 +19,7 @@ export async function findUserByEmail({projectId, formData} : {projectId : Proje
 export async function addUserToProject({projectId, id} : {projectId : Project['_id'], id: TeamMember['_id']}) {
     try {
         const url = `/projects/${projectId}/team`; // URL que se pasará a la API para la petición
-        const { data } = await api.post(url, {id}); // Se envía la petición POST por medio de la API
+        const { data } = await api.post<string>(url, {id}); // Se envía la petición POST por medio de la API
         return data;
     } catch (error) {
         if(isAxiosError(error) && error.response) {
@@ -37,6 +37,19 @@ export async function getProjectTeam(projectId : Project['_id']) {
         if(response.success) {
             return response.data;
         }
+    } catch (error) {
+        if(isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error); // Si el error es de axios y tiene una respuesta, se lanza un error con el mensaje de error
+        };
+    };
+};
+
+// Remover usuario del proyecto - DELETE
+export async function removeUserFromProject({projectId, userId} : {projectId : Project['_id'], userId: TeamMember['_id']}) {
+    try {
+        const url = `/projects/${projectId}/team/${userId}`; // URL que se pasará a la API para la petición
+        const { data } = await api.delete<string>(url); // Se envía la petición POST por medio de la API
+        return data;
     } catch (error) {
         if(isAxiosError(error) && error.response) {
             throw new Error(error.response.data.error); // Si el error es de axios y tiene una respuesta, se lanza un error con el mensaje de error

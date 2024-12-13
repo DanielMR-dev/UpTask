@@ -47,13 +47,13 @@ export class TeamMemberController {
 
     // REMOVE USER
     static removeUserById = async (req: Request, res: Response) => {
-        const { id } = req.body; // Obtener el id del body de la petición
-        if(!req.project.team.some(team => team.toString() === id.toString())) { // Verificar si el usuario no existe en el equipo
+        const { userId } = req.params; // Obtener el id de los params de la URL
+        if(!req.project.team.some(team => team.toString() === userId.toString())) { // Verificar si el usuario no existe en el equipo
             const error = new Error('El Usuario NO existe en el Proyecto');
             res.status(409).json({ error: error.message}); // 409 para un conflicto
             return;
         };
-        req.project.team = req.project.team.filter(teamMember => teamMember.toString() !== id.toString()); // Eliminar el id del usuario
+        req.project.team = req.project.team.filter(teamMember => teamMember.toString() !== userId.toString()); // Eliminar el id del usuario
         await req.project.save(); // Guardar los cambios en el proyecto
         res.send('Usuario eliminado correctamente');
     };
