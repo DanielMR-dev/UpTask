@@ -65,6 +65,11 @@ export class TaskController {
         try {
             const { status } = req.body; // Se obtiene el nuevo estado de la tarea
             req.task.status = status; // Se actualiza el estado de la tarea
+            if(status === 'pending') { 
+                req.task.completedBy == null;
+            } else {
+                req.task.completedBy = req.user.id; // Se actualiza el usuario que completó la tarea
+            };
             await req.task.save(); // Se actualiza la tarea en la base de datos
             res.send('Estado de la tarea actualizado correctamente');
         } catch (error) {
