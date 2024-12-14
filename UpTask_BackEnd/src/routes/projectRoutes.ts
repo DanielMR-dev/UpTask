@@ -166,4 +166,11 @@ router.get('/:projectId/tasks/:taskId/notes',
     NoteController.getTaskNotes
 );
 
+// Eliminar una nota
+router.delete('/:projectId/tasks/:taskId/notes/:noteId',
+    param('noteId').isMongoId().withMessage('ID no Válido'),
+    handleInpoutErrors,
+    NoteController.deleteNote
+)
+
 export default router;
