@@ -7,10 +7,11 @@ import { projectExist } from "../middleware/project";
 import { hasAutorization, taskBelongsToProject, taskExist } from "../middleware/task";
 import { authenticate } from "../middleware/auth";
 import { TeamMemberController } from "../controllers/TeamController";
+import { NoteController } from "../controllers/NoteControlle";
 
 const router = Router();
 
-// ROUTES PARA LOS PROYECTOS
+// RUTAS PARA LOS PROYECTOS
 
 // Autenticar todas la rutas
 router.use(authenticate);
@@ -56,7 +57,7 @@ router.delete('/:id',
 );
 
 
-// ROUTES PARA LAS TAREAS
+// RUTAS PARA LAS TAREAS
 
 // - MIDDLEWARES
 router.param('projectId', projectExist); // Validación de ID del proyecto antes de las rutas de tareas
@@ -147,6 +148,17 @@ router.delete('/:projectId/team/:userId',
         .isMongoId().withMessage('ID no válido'),
     handleInpoutErrors,
     TeamMemberController.removeUserById
+);
+
+
+// RUTAS PARA LAS NOTAS
+
+// Crear Nota
+router.post('/:projectId/tasks/:taskId/notes',
+    body('content')
+        .notEmpty().withMessage('El Contenido de la nota es obligatorio'),
+    handleInpoutErrors,
+    NoteController.createNote
 );
 
 export default router;
