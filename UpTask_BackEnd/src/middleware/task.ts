@@ -34,3 +34,12 @@ export function taskBelongsToProject(req : Request, res: Response, next: NextFun
     };
     next(); // Si pertenece, pasa al siguiente Middleware
 };
+
+export function hasAutorization(req : Request, res: Response, next: NextFunction) {
+    if(req.user.id.toString() !== req.project.manager.toString()) { // Se verifica si el usuario es el administrador del proyecto
+        const error = new Error('Acción no válida'); // Si no es el admin se crea un error
+        res.status(400).json({ error: error.message});
+        return;
+    };
+    next(); // Si pertenece, pasa al siguiente Middleware
+};
