@@ -16,7 +16,10 @@ export interface ITask extends Document {
     description: string;
     project: Types.ObjectId; // Referencia a otro documento
     status: taskStatus;
-    completedBy: Types.ObjectId; 
+    completedBy: {
+        user: Types.ObjectId;
+        status: taskStatus;
+    }[]; // Array de objetos
 };
 
 // Definir el Schema para Mongoose
@@ -40,11 +43,20 @@ export const TaskSchema: Schema = new Schema({
         enum: Object.values(taskStatus), // Validar que el valor sea uno de los permitidos
         default: taskStatus.PENDING,
     },
-    completedBy: {
-        type: Types.ObjectId,
-        ref: 'User',
-        default: null
-    }
+    completedBy: [
+        {
+            user: {
+                type: Types.ObjectId,
+                ref: 'User',
+                default: null
+            },
+            status: {
+                type: String,
+                enum: Object.values(taskStatus), // Validar que el valor sea uno de los permitidos
+                default: taskStatus.PENDING,
+            }
+        }
+    ]
 }, {timestamps: true});
 
 // Definir el Modelo para Mongoose
