@@ -31,7 +31,8 @@ export class TaskController {
     // GET BY ID
     static getTaskById = async (req: Request, res: Response) => {
         try {
-            res.json(req.task); // Se envía la tarea encontrada en formato JSON
+            const task = await Task.findById(req.task.id).populate({path: 'completedBy', select: 'id name email'}); // Se busca la tarea por ID y se seleccionan solo los campos id y name del usuario que la completó
+            res.json(task); // Se envía la tarea encontrada en formato JSON
         } catch (error) {
             res.status(500).json({ error: 'Server Error' });
         }
