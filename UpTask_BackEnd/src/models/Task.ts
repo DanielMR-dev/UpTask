@@ -20,6 +20,7 @@ export interface ITask extends Document {
         user: Types.ObjectId;
         status: taskStatus;
     }[]; // Array de objetos
+    notes: Types.ObjectId[]; // Arreglo de notas
 };
 
 // Definir el Schema para Mongoose
@@ -56,7 +57,13 @@ export const TaskSchema: Schema = new Schema({
                 default: taskStatus.PENDING,
             }
         }
-    ]
+    ],
+    notes: [
+        {
+            type: Types.ObjectId,
+            ref: 'Note'
+        },
+    ],
 }, {timestamps: true});
 
 // Definir el Modelo para Mongoose
