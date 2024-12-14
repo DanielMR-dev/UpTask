@@ -7,7 +7,7 @@ import { projectExist } from "../middleware/project";
 import { hasAutorization, taskBelongsToProject, taskExist } from "../middleware/task";
 import { authenticate } from "../middleware/auth";
 import { TeamMemberController } from "../controllers/TeamController";
-import { NoteController } from "../controllers/NoteControlle";
+import { NoteController } from "../controllers/NoteController";
 
 const router = Router();
 
@@ -159,6 +159,11 @@ router.post('/:projectId/tasks/:taskId/notes',
         .notEmpty().withMessage('El Contenido de la nota es obligatorio'),
     handleInpoutErrors,
     NoteController.createNote
+);
+
+// Obtener las notas
+router.get('/:projectId/tasks/:taskId/notes',
+    NoteController.getTaskNotes
 );
 
 export default router;

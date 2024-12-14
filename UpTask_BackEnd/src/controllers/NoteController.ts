@@ -17,4 +17,14 @@ export class NoteController {
             res.status(500).json({ error: 'Server Error' });
         }
     };
+
+    static getTaskNotes = async (req: Request, res: Response) => { // Usando generic se le da el type de INote al req.body
+        try {
+            const notes = await Note.find({task: req.task.id}); // Se buscan las notas de la tarea
+            res.json(notes);
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: 'Server Error' });
+        }
+    };
 };
