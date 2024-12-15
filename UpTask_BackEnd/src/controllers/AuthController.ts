@@ -250,4 +250,27 @@ export class AuthController {
         });
         return;   
     };
+
+    // Actualizar Perfil
+    static updateProfile = async (req: Request, res: Response) => {
+        const { name, email } = req.body; // Se obtiene el nombre y email del body
+        
+        const userExist = await User.findOne({ email }); // Se busca al usuario en la base de datos por su email
+        if(userExist && userExist.id.toString() !== req.user.id.toString() ) { // Si el usuario existe y NO es el mismo usuario
+            const error = new Error('Email no disponible');
+            res.status(409).json({error: error.message});
+            return;
+        };
+
+        req.user.name = name; // Se actualiza el nombre del usuario
+        req.user.email = email; // Se actualiza el email del usuario
+
+        try {
+            await req.user.save(); // Se guarda el usuario en la base de datos
+            res.send('Perfil Actualizado correctamente');
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: 'Server Error' });
+        }
+    };
 };
