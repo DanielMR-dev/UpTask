@@ -21,7 +21,7 @@ export default function ProfileForm({ data } : ProfileFormProps) {
             queryClient.invalidateQueries({queryKey: ['user']}); // Invalidar los queries para recagar las datos de la caché
 
         }
-    })
+    });
 
     const handleEditProfile = (formData : UserProfileForm) => mutate(formData);
 
