@@ -5,7 +5,7 @@ import NoteDetail from "./NoteDetail";
 
 type NotesPanelProps = {
     notes: Task['notes'];
-}
+};
 
 export default function NotesPanel({notes} : NotesPanelProps) {
     return (
@@ -16,7 +16,7 @@ export default function NotesPanel({notes} : NotesPanelProps) {
                 {notes.length ? (
                     <>
                         <p className="font-bold text-2xl text-slate-600 my-5"></p>
-                        {notes.map(note => <NoteDetail />)}
+                        {notes.map(note => <NoteDetail key={note._id} note={note} />)}
                     </>
                 ) : <p className="text-gray-500 text-center pt-3">No hay notas</p>}
             </div>
