@@ -92,4 +92,21 @@ router.put('/profile',
     AuthController.updateProfile
 );
 
+// Actualizar Contraseña actual
+router.post('/update-password',
+    authenticate,
+    body('current_password')
+        .notEmpty().withMessage('El Password actual no puede ir vacio'),
+    body('password')
+        .isLength({min: 8}).withMessage('El Password es muy corto, mínimo 8 caracteres'),
+    body('password_confirmation').custom((value, {req}) => {
+        if(value !== req.body.password) {
+            throw new Error('Los Password no coinciden');
+        };
+        return true;
+    }),
+    handleInpoutErrors,
+    AuthController.updateCurrentUserPassword
+);
+
 export default router;

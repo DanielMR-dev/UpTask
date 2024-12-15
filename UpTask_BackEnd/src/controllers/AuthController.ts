@@ -273,4 +273,26 @@ export class AuthController {
             res.status(500).json({ error: 'Server Error' });
         }
     };
+
+    // Actualizar Contraseña
+    static updateCurrentUserPassword = async (req: Request, res: Response) => {
+        const { current_password, password } = req.body; // Se obtiene el password actual y el nuevo password del body
+
+        const user = await User.findById(req.user.id) ; // Se busca al usuario en la base de datos por su id
+        const isPasswordCorrect = await checkPassword(current_password, user.password); // Se verifica si el password actual es correcto
+        if(!isPasswordCorrect) {
+            const error = new Error('El Password actual es incorrecto');
+            res.status(401).json({error: error.message});
+            return;
+        };
+
+        try {
+            user.password = await hashPassword(password); // Se hashea el nuevo password
+            await user.save(); // Se guarda el usuario en la base de datos
+            res.send('Contraseña Actualizada correctamente');
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: 'Server Error' });
+        }
+    };
 };
