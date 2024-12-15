@@ -1,6 +1,9 @@
 import { useForm } from "react-hook-form";
 import ErrorMessage from "../ErrorMessage";
 import { User, UserProfileForm } from "@/types/index";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateProfile } from "@/api/ProfileAPI";
+import { toast } from "react-toastify";
 
 type ProfileFormProps = {
     data: User;
@@ -9,7 +12,18 @@ type ProfileFormProps = {
 export default function ProfileForm({ data } : ProfileFormProps) {
     const { register, handleSubmit, formState: { errors } } = useForm<UserProfileForm>({ defaultValues: data });
 
-    const handleEditProfile = (formData : UserProfileForm) => {};
+    const queryClient = useQueryClient();
+    const { mutate } = useMutation({
+        mutationFn: updateProfile,
+        onError: (error) => toast.error(error.message),
+        onSuccess: (data) => {
+            toast.success(data);
+            queryClient.invalidateQueries({queryKey: ['user']}); // Invalidar los queries para recagar las datos de la caché
+
+        }
+    })
+
+    const handleEditProfile = (formData : UserProfileForm) => mutate(formData);
 
     return (
         <>
@@ -31,7 +45,7 @@ export default function ProfileForm({ data } : ProfileFormProps) {
                             id="name"
                             type="text"
                             placeholder="Tu Nombre"
-                            className="w-full p-3  border border-gray-200 shadow-lg"
+                            className="w-full p-3  border border-gray-200"
                             {...register("name", {
                                 required: "Nombre de usuario es obligatoro",
                             })}
