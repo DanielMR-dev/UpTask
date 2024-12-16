@@ -295,4 +295,19 @@ export class AuthController {
             res.status(500).json({ error: 'Server Error' });
         }
     };
+
+    // Revisar el Password - POST
+    static checkPassword = async (req: Request, res: Response) => {
+        const { password } = req.body; // Se obtiene el password actual y el nuevo password del body
+
+        const user = await User.findById(req.user.id) ; // Se busca al usuario en la base de datos por su id
+        const isPasswordCorrect = await checkPassword(password, user.password); // Se verifica si el password actual es correcto
+        if(!isPasswordCorrect) {
+            const error = new Error('El Password es incorrecto');
+            res.status(401).json({error: error.message});
+            return;
+        };
+
+        res.send('Password Correcto');
+    };
 };

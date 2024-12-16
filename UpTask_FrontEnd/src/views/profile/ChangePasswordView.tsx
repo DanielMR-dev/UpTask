@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
 import ErrorMessage from "@/components/ErrorMessage"
 import { UpdateCurrentUserPasswordForm } from "@/types/index";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { changePassword } from "@/api/ProfileAPI";
 import { toast } from "react-toastify";
 
