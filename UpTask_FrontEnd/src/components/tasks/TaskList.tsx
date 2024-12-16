@@ -1,8 +1,12 @@
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { Task } from "@/types/index";
+import { Task, TaskStatus } from "@/types/index";
 import TaskCard from "./TaskCard";
 import { statusTranslations } from "@/locales/es";
 import DropTask from "./DropTask";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateStatus } from "@/api/TaskAPI";
+import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 type TaskListProps = {
@@ -33,6 +37,24 @@ const statusStyles: {[key:string] : string} = { // Las keys y los valores son st
 }
 
 export default function TaskList({ tasks, canEdit } : TaskListProps) {
+
+    // Obtener projectId
+    const params = useParams();
+    const projectId = params.projectId!; // Obtener projectId desde la URL
+    const queryClient = useQueryClient(); // Obtener la instancia de la caché
+
+    // Hook encargado de realizar la actualización
+    const { mutate } = useMutation({
+        mutationFn: updateStatus,
+        onError(error) {
+            toast.error(error.message);
+        },
+        onSuccess(data) {
+            toast.success(data);
+            queryClient.invalidateQueries({queryKey: ['project', projectId]}); // Invalidar el query de "project" para actualizar la lista de las tareas
+        }
+    });
+
     // Agrupar las tareas en un objeto
     const groupedTasks = tasks.reduce((acc, task) => { // 
         let currentGroup = acc[task.status] ? [...acc[task.status]] : []; // 
@@ -43,7 +65,10 @@ export default function TaskList({ tasks, canEdit } : TaskListProps) {
     const handleDragEnd = (e : DragEndEvent) => {
         const { over, active } = e;
         if(over && over.id) {
+            const taskId = active.id.toString(); // Obtener el id de la tarea que se arrastró
+            const status = over.id as TaskStatus; // Obtener el status de la tarea que se está arrastrando
 
+            mutate({projectId, taskId, status}); // Llamar a la función de actualización
         };
     };
 
