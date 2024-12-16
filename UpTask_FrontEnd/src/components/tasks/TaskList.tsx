@@ -1,6 +1,7 @@
 import { Task } from "@/types/index";
 import TaskCard from "./TaskCard";
 import { statusTranslations } from "@/locales/es";
+import DropTask from "./DropTask";
 
 
 type TaskListProps = {
@@ -48,6 +49,9 @@ export default function TaskList({ tasks, canEdit } : TaskListProps) {
                         <h3 
                             className={`captalize text-xl font-light border border-slate-300 bg-white p-3 border-t-8 ${statusStyles[status]}`}
                         >{statusTranslations[status]}</h3>
+
+                        <DropTask />
+
                         <ul className='mt-5 space-y-5'>
                             {tasks.length === 0 ? (
                                 <li className="text-gray-500 text-center pt-3">No Hay tareas</li>
