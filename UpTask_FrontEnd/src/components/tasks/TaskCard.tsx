@@ -40,7 +40,7 @@ export default function TaskCard({ task, canEdit } : TaskCardProps) {
     });
 
     const style = transform ? {
-
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` // Se utiliza para darle estilo a la tarea 
     } : undefined;
 
     return (

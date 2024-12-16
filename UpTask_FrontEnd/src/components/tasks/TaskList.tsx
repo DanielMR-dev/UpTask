@@ -1,3 +1,4 @@
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { Task } from "@/types/index";
 import TaskCard from "./TaskCard";
 import { statusTranslations } from "@/locales/es";
@@ -39,28 +40,37 @@ export default function TaskList({ tasks, canEdit } : TaskListProps) {
         return { ...acc, [task.status]: currentGroup };
     }, intialStatusGroups);
 
+    const handleDragEnd = (e : DragEndEvent) => {
+        const { over, active } = e;
+        if(over && over.id) {
+
+        };
+    };
+
     return (
         <>
             <h2 className="text-5xl font-black my-10">Tareas</h2>
 
             <div className='flex gap-5 overflow-x-scroll 2xl:overflow-auto pb-32'>
-                {Object.entries(groupedTasks).map(([status, tasks]) => (
-                    <div key={status} className='flex-1 min-w-[200px] 2xl:min-w-0'>
-                        <h3 
-                            className={`captalize text-xl font-light border border-slate-300 bg-white p-3 border-t-8 ${statusStyles[status]}`}
-                        >{statusTranslations[status]}</h3>
+                <DndContext onDragEnd={handleDragEnd}>
+                    {Object.entries(groupedTasks).map(([status, tasks]) => (
+                        <div key={status} className='flex-1 min-w-[200px] 2xl:min-w-0'>
+                            <h3 
+                                className={`captalize text-xl font-light border border-slate-300 bg-white p-3 border-t-8 ${statusStyles[status]}`}
+                            >{statusTranslations[status]}</h3>
 
-                        <DropTask />
+                            <DropTask status={status} />
 
-                        <ul className='mt-5 space-y-5'>
-                            {tasks.length === 0 ? (
-                                <li className="text-gray-500 text-center pt-3">No Hay tareas</li>
-                            ) : (
-                                tasks.map(task => <TaskCard key={task._id} task={task} canEdit={canEdit} />)
-                            )}
-                        </ul>
-                    </div>
-                ))}
+                            <ul className='mt-5 space-y-5'>
+                                {tasks.length === 0 ? (
+                                    <li className="text-gray-500 text-center pt-3">No Hay tareas</li>
+                                ) : (
+                                    tasks.map(task => <TaskCard key={task._id} task={task} canEdit={canEdit} />)
+                                )}
+                            </ul>
+                        </div>
+                    ))}
+                </DndContext>
             </div>
         </>
     );
