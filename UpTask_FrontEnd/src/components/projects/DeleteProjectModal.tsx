@@ -4,9 +4,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import ErrorMessage from "../ErrorMessage";
 import { CheckPasswordForm } from '@/types/index';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { checkPassword } from '@/api/AuthAPI';
 import { toast } from 'react-toastify';
+import { deleteProject } from '@/api/ProjectAPI';
 
 export default function DeleteProjectModal() {
     const initialValues : CheckPasswordForm = {
@@ -26,8 +27,24 @@ export default function DeleteProjectModal() {
         onError: (error) => toast.error(error.message)
     });
 
+    // Manejo de la eliminación del proyecto
+    const queryClient = useQueryClient();
+    const deleteProjectMutation = useMutation({ // Se aplica destructuring a mutate
+        mutationFn: deleteProject, // La función que se va a ejecutar 
+        onError: (error) => { // Si hay un error
+            toast.error(error.message);
+        },
+        onSuccess: (data) => { // Si la operación se ejecuta correctamente toma los datos que retorna la función del mutationFn
+            toast.success(data);
+            queryClient.invalidateQueries({queryKey: ['projects']}); // Invalida el query de projects - Fuerza un nuevo ReFetch a la API para obtener los datos actualizados
+            navigate(location.pathname, { replace: true }); // Cerrar la ventana modal
+        }
+    });
+
     const handleForm = async (formData : CheckPasswordForm) => {
-        await checkUserPasswordMutation.mutateAsync(formData);
+        // Con mutateAsync hacemos que se bloquee el código hasta que se ejecute esa mutación
+        await checkUserPasswordMutation.mutateAsync(formData); 
+        await deleteProjectMutation.mutateAsync(deleteProjectId);
     };
 
 
