@@ -37,9 +37,13 @@ router.get('/:id',
     ProjectController.getProjectById
 );
 
+// - MIDDLEWARES
+router.param('projectId', projectExist); // Validación de ID del proyecto antes de las rutas de tareas
+
+
 // Actualizar proyecto
-router.put('/:id', 
-    param('id').isMongoId().withMessage('ID no válido'), // Validación de ID
+router.put('/:projectId', 
+    param('projectId').isMongoId().withMessage('ID no válido'), // Validación de ID
     body('projectName')
         .notEmpty().withMessage('El Nombre del Projecto es Obligatorio'),
     body('clientName')
@@ -47,20 +51,19 @@ router.put('/:id',
     body('description')
         .notEmpty().withMessage('La Descripción del Proyecto es Obligatoria'),
     handleInpoutErrors, // Si pasa la validación pasa al controlador, de lo contrario se de tiene la ejecución en el middleware
+    hasAutorization,
     ProjectController.updateProject
 );
 
 // Eliminar proyecto
-router.delete('/:id', 
-    param('id').isMongoId().withMessage('ID no válido'), // Validación de ID
+router.delete('/:projectId', 
+    param('projectId').isMongoId().withMessage('ID no válido'), // Validación de ID
+    hasAutorization,
     ProjectController.deleteProject
 );
 
 
 // RUTAS PARA LAS TAREAS
-
-// - MIDDLEWARES
-router.param('projectId', projectExist); // Validación de ID del proyecto antes de las rutas de tareas
 
 // Crear tarea
 router.post('/:projectId/tasks',

@@ -62,27 +62,12 @@ export class ProjectController { // El controlador se encarga de manejar las pet
 
     // UPDATE
     static updateProject = async (req: Request, res: Response) => {
-        const { id } = req.params; // Se obtiene el id del proyecto de la URL
         try {
-            const project = await Project.findById(id); // Se busca el proyecto en la DB por su ID
+            req.project.clientName = req.body.clientName; // Se actualiza el nombre del cliente
+            req.project.projectName = req.body.projectName; // Se actualiza el nombre del proyecto
+            req.project.description = req.body.description; // Se actualiza la descripción del proyecto
 
-            if(!project) {
-                const error = new Error('Proyecto no encontrado');
-                res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
-                return;
-            };
-
-            if( project.manager.toString() !== req.user.id.toString() ) {
-                const error = new Error('Solo el Manager puede actualizar un proyecto');
-                res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
-                return;
-            };
-
-            project.clientName = req.body.clientName; // Se actualiza el nombre del cliente
-            project.projectName = req.body.projectName; // Se actualiza el nombre del proyecto
-            project.description = req.body.description; // Se actualiza la descripción del proyecto
-
-            await project.save(); // Se actualiza el proyecto en la DB
+            await req.project.save(); // Se actualiza el proyecto en la DB
             res.send('Proyecto Actualizado');
         } catch (error) {
             console.log(error);
@@ -92,23 +77,8 @@ export class ProjectController { // El controlador se encarga de manejar las pet
 
     // DELETE
     static deleteProject = async (req: Request, res: Response) => {
-        const { id } = req.params; // Se obtiene el id del proyecto de la URL
         try {
-            const project = await Project.findById(id); // Se busca el proyecto en la DB por su ID
-
-            if(!project) {
-                const error = new Error('Proyecto no encontrado');
-                res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
-                return;
-            };
-
-            if( project.manager.toString() !== req.user.id.toString() ) {
-                const error = new Error('Solo el Manager puede eliminar un proyecto');
-                res.status(404).json({ error: error.message}); // Se envía el error en formato JSON
-                return;
-            };
-
-            await project.deleteOne(); // Se elimina el proyecto de la DB
+            await req.project.deleteOne(); // Se elimina el proyecto de la DB
             res.send('Projecto Eliminado');
         } catch (error) {
             console.log(error);
