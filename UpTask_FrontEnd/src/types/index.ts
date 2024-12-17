@@ -84,6 +84,12 @@ export const dashBoardProjectSchema = z.array(
         manager: true,
     })
 );
+
+export const editProjectSchema = projectSchema.pick({
+    projectName: true,
+    clientName: true,
+    description: true,
+});
 export type Project = z.infer<typeof projectSchema>; // Genera el type de Project con el Schema de projectSchema
 export type ProjectFormData = Pick<Project, 'projectName' | 'clientName' | 'description'>; // Genera el type de ProjectFormData con los campos que se van a enviar en el formulario
 
