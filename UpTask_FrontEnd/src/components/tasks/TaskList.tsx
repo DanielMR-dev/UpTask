@@ -6,7 +6,7 @@ import DropTask from "./DropTask";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateStatus } from "@/api/TaskAPI";
 import { toast } from "react-toastify";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 
 type TaskListProps = {
@@ -67,8 +67,25 @@ export default function TaskList({ tasks, canEdit } : TaskListProps) {
         if(over && over.id) {
             const taskId = active.id.toString(); // Obtener el id de la tarea que se arrastró
             const status = over.id as TaskStatus; // Obtener el status de la tarea que se está arrastrando
-
             mutate({projectId, taskId, status}); // Llamar a la función de actualización
+
+            // Actualizar el query en tiempo real
+            queryClient.setQueryData(['project', projectId], (prevData) => {
+                const updatedTasks = prevData.tasks.map((task: Task) => {
+                    if(task._id === taskId) {
+                        return {
+                            ...task,
+                            status
+                        };
+                    };
+                    return task;
+                });
+
+                return {
+                    ...prevData,
+                    tasks: updatedTasks // Actualizar la lista de tareas
+                };
+            });
         };
     };
 
