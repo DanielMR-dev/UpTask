@@ -1,6 +1,7 @@
 import mongoose,{ Schema, Document, PopulatedDoc, Types } from "mongoose";
-import { ITask } from "./Task";
+import Task, { ITask } from "./Task";
 import { IUser } from "./User";
+import Note from "./Note";
 
 // Definir la interface para TypeScript
 export interface IProject extends Document {
@@ -46,6 +47,17 @@ const projectSchema: Schema = new Schema({
         }
     ],
 }, {timestamps: true});
+
+// Middleware
+projectSchema.pre('deleteOne', {document: true}, async function() {
+    const projectId = this._id; // Obtiene el ID del Proyecto a eliminar
+    if(!projectId) return;
+    const tasks = await Task.find({ project: projectId }); // Busca tareas asociadas al proyecto
+    for(const task of tasks) { // Iterar en cada tarea
+        await Note.deleteMany({task: task._id}); // Elimina notas asociadas a cada tarea
+    };
+    await Task.deleteMany({project: projectId}); // Elimina las Tareas asociadas al Proyecto
+});
 
 // Definir el Modelo para Mongoose
 const Project = mongoose.model<IProject>('Project', projectSchema); // Se hace referencia el Type via Generics
