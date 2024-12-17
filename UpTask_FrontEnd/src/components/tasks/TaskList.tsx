@@ -1,5 +1,5 @@
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
-import { Task, TaskStatus } from "@/types/index";
+import { Project, TaskProject, TaskStatus } from "@/types/index";
 import TaskCard from "./TaskCard";
 import { statusTranslations } from "@/locales/es";
 import DropTask from "./DropTask";
@@ -10,12 +10,12 @@ import { useParams } from "react-router-dom";
 
 
 type TaskListProps = {
-    tasks: Task[];
+    tasks: TaskProject[];
     canEdit: boolean;
 };
 
 type GroupedTasks = {
-    [key: string]: Task[]; // Base de los arreglos de las tareas
+    [key: string]: TaskProject[]; // Base de los arreglos de las tareas
 };
 
 // Valores iniciales para el objeto de tareas
@@ -70,8 +70,8 @@ export default function TaskList({ tasks, canEdit } : TaskListProps) {
             mutate({projectId, taskId, status}); // Llamar a la función de actualización
 
             // Actualizar el query en tiempo real
-            queryClient.setQueryData(['project', projectId], (prevData) => {
-                const updatedTasks = prevData.tasks.map((task: Task) => {
+            queryClient.setQueryData(['project', projectId], (prevData : Project) => {
+                const updatedTasks = prevData.tasks.map((task: TaskProject) => {
                     if(task._id === taskId) {
                         return {
                             ...task,

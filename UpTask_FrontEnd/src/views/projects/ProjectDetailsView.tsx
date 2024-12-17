@@ -1,4 +1,4 @@
-import { getProjectById } from "@/api/ProjectAPI";
+import { getFullProject } from "@/api/ProjectAPI";
 import AddTaskModal from "@/components/tasks/AddTaskModal";
 import EditTaskData from "@/components/tasks/EditTaskData";
 import TaskList from "@/components/tasks/TaskList";
@@ -21,7 +21,7 @@ export default function ProjectDetailsView() {
     // Traer los proyectos desde la API
     const { data, isLoading, isError } = useQuery({
         queryKey: ['project', projectId], // El queryKey es un array que identifica la query
-        queryFn: () => getProjectById(projectId), // Cuando se tienen que enviar parámetros a la funcion de queryFn se usa la sintáxis de callBack
+        queryFn: () => getFullProject(projectId), // Cuando se tienen que enviar parámetros a la funcion de queryFn se usa la sintáxis de callBack
         retry: false // Si se quiere que se vuelva a intentar la query si falla
     });
     const canEdit = useMemo(() => data?.manager === user?._id , [data, user]);
